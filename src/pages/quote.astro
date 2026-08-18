@@ -24,19 +24,19 @@ import TrustBadges from '../components/TrustBadges.astro';
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">2. Service Type</label>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <label class="border border-slate-200 rounded-lg p-3 flex items-center space-x-2.5 text-xs font-medium cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 has-[:checked]:font-bold">
-              <input type="radio" name="service_type" value="Full Bathroom Tiling & Renovation" checked class="text-sky-600 focus:ring-sky-500" />
+              <input type="radio" name="service_type" id="srv-bathroom" value="Full Bathroom Tiling & Renovation" checked class="text-sky-600 focus:ring-sky-500" />
               <span>Full Bathroom Tiling</span>
             </label>
             <label class="border border-slate-200 rounded-lg p-3 flex items-center space-x-2.5 text-xs font-medium cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 has-[:checked]:font-bold">
-              <input type="radio" name="service_type" value="Kitchen Splashbacks & Walls" class="text-sky-600 focus:ring-sky-500" />
+              <input type="radio" name="service_type" id="srv-kitchen" value="Kitchen Splashbacks & Walls" class="text-sky-600 focus:ring-sky-500" />
               <span>Kitchen Splashback & Walls</span>
             </label>
             <label class="border border-slate-200 rounded-lg p-3 flex items-center space-x-2.5 text-xs font-medium cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 has-[:checked]:font-bold">
-              <input type="radio" name="service_type" value="Living / Hallway Floor Tiling" class="text-sky-600 focus:ring-sky-500" />
+              <input type="radio" name="service_type" id="srv-floor" value="Living / Hallway Floor Tiling" class="text-sky-600 focus:ring-sky-500" />
               <span>Floor Tiling & Underfloor Heating</span>
             </label>
             <label class="border border-slate-200 rounded-lg p-3 flex items-center space-x-2.5 text-xs font-medium cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 has-[:checked]:font-bold">
-              <input type="radio" name="service_type" value="Walk-in Wet Room Waterproofing & Tanking" class="text-sky-600 focus:ring-sky-500" />
+              <input type="radio" name="service_type" id="srv-wetroom" value="Walk-in Wet Room Waterproofing & Tanking" class="text-sky-600 focus:ring-sky-500" />
               <span>Wet Room Tanking & Shower</span>
             </label>
           </div>
@@ -90,8 +90,8 @@ import TrustBadges from '../components/TrustBadges.astro';
           </div>
         </div>
 
-        <button type="submit" id="submit-btn" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm py-3.5 rounded-xl shadow-lg transition flex items-center justify-center">
-          <span>Get Free Fixed Quote & Check Availability →</span>
+        <button type="submit" id="submit-btn" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm py-3.5 rounded-xl shadow-lg transition flex items-center justify-center cursor-pointer">
+          <span id="btn-text">Get Free Fixed Quote & Check Availability →</span>
         </button>
       </form>
 
@@ -104,34 +104,70 @@ import TrustBadges from '../components/TrustBadges.astro';
   </div>
 </Layout>
 
-<script>
+<script is:inline>
+  // 1. Auto-prefill form from URL query parameters (e.g. from city pages)
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const pPostcode = params.get('postcode');
+    const pCity = params.get('city');
+    const pService = params.get('service');
+
+    if (pPostcode) {
+      const pcInput = document.getElementById('lead-postcode');
+      if (pcInput && !pcInput.value) pcInput.value = pPostcode;
+    } else if (pCity) {
+      const pcInput = document.getElementById('lead-postcode');
+      if (pcInput && !pcInput.value) pcInput.value = pCity;
+    }
+
+    if (pService) {
+      const srvMap = {
+        'bathroom': 'srv-bathroom',
+        'kitchen': 'srv-kitchen',
+        'floor': 'srv-floor',
+        'wetroom': 'srv-wetroom'
+      };
+      const targetId = srvMap[pService.toLowerCase()];
+      if (targetId) {
+        const radio = document.getElementById(targetId);
+        if (radio) radio.checked = true;
+      }
+    }
+  });
+
+  // 2. Handle robust form submission
   const form = document.getElementById('lead-form');
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const btnText = document.getElementById('btn-text');
     const btn = document.getElementById('submit-btn');
-    if (btn) btn.innerHTML = 'Submitting your request...';
+    if (btnText) btnText.innerText = 'Submitting your request...';
+    if (btn) btn.disabled = true;
+
+    const checkedService = document.querySelector('input[name="service_type"]:checked');
 
     const payload = {
-      name: (document.getElementById('lead-name') as HTMLInputElement).value,
-      phone: (document.getElementById('lead-phone') as HTMLInputElement).value,
-      email: (document.getElementById('lead-email') as HTMLInputElement)?.value || '',
-      postcode: (document.getElementById('lead-postcode') as HTMLInputElement).value,
-      service: (form.querySelector('input[name="service_type"]:checked') as HTMLInputElement)?.value,
-      area_size: (document.getElementById('lead-area') as HTMLSelectElement)?.value,
-      timeframe: (document.getElementById('lead-timeframe') as HTMLSelectElement)?.value,
-      notes: (document.getElementById('lead-notes') as HTMLTextAreaElement).value,
+      name: document.getElementById('lead-name').value,
+      phone: document.getElementById('lead-phone').value,
+      email: document.getElementById('lead-email')?.value || '',
+      postcode: document.getElementById('lead-postcode').value,
+      service: checkedService ? checkedService.value : 'General Tiling',
+      area_size: document.getElementById('lead-area')?.value || 'Medium (8-18 sqm)',
+      timeframe: document.getElementById('lead-timeframe')?.value || 'Within 1-2 Weeks',
+      notes: document.getElementById('lead-notes')?.value || '',
       source_title: "Approved Tilers UK",
       timestamp: new Date().toISOString()
     };
 
     try {
-      await fetch('https://roamglade-form-hub.dwx168200.workers.dev/api/leads?service=tiling&list_id=10&inbox_id=wSE3K4odsBvsv6gYzeLTh9et', {
+      const resp = await fetch('https://roamglade-form-hub.dwx168200.workers.dev/api/form?service=tiling&list_id=10&inbox_id=wSE3K4odsBvsv6gYzeLTh9et', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
+      console.log('Submission response:', resp.status);
     } catch (err) {
-      console.log('Dispatched with fallback');
+      console.error('Fetch error:', err);
     }
 
     form.classList.add('hidden');
