@@ -1,0 +1,13 @@
+{
+  "name": "approved-tilers-root",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "site"
+  ],
+  "scripts": {
+    "build": "npm --prefix site run build",
+    "dev": "npm --prefix site run dev",
+    "preview": "npm --prefix site run preview"
+  }
+}
