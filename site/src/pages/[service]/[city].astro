@@ -1,0 +1,130 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import TrustBadges from '../../components/TrustBadges.astro';
+import PriceCalculator from '../../components/PriceCalculator.astro';
+import dataset from '../../data/tiling_pseo_dataset.json';
+
+export async function getStaticPaths() {
+  return dataset.map((item) => ({
+    params: {
+      service: item.service_slug,
+      city: item.city_slug
+    },
+    props: { data: item }
+  }));
+}
+
+const { data } = Astro.props;
+---
+
+<Layout title={data.h1 + " | 100% Fixed Price Quotes"} description={data.meta_description} schema={data.schema}>
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white pt-12 pb-16 px-4 relative">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div class="lg:col-span-7 space-y-5">
+        <div class="inline-flex items-center space-x-2 bg-sky-950/80 border border-sky-500/30 text-sky-300 text-xs font-semibold px-3 py-1.5 rounded-full">
+          <span>📍 Local Master Tiler Serving {data.city} ({data.postcode}) & {data.county}</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
+          {data.h1}
+        </h1>
+        <p class="text-slate-300 text-base leading-relaxed">
+          {data.summary} Tailored specifically for {data.house_type_context} across {data.city}. 
+        </p>
+
+        <!-- Bullet Highlights -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 text-xs text-slate-200">
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span>Laser alignment & flat subfloor prep</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span>£2M Public Liability Insurance</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span>12-Month Workmanship Warranty</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span>100% Fixed Price — No Rogue Extras</span>
+          </div>
+        </div>
+
+        <div class="pt-4 flex flex-wrap gap-4 items-center">
+          <a href={`/quote?city=${encodeURIComponent(data.city)}&postcode=${encodeURIComponent(data.postcode)}`} class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-7 py-3.5 rounded-lg shadow-lg text-base transition flex items-center">
+            Get Your Free Fixed Quote in {data.city}
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Fast Quote Card -->
+      <div class="lg:col-span-5 bg-white text-slate-900 p-6 rounded-2xl shadow-2xl border border-slate-100">
+        <div class="border-b border-slate-100 pb-4 mb-4">
+          <span class="text-xs font-bold uppercase tracking-wider text-sky-700">Fast Local Response</span>
+          <h3 class="text-xl font-extrabold text-slate-900 mt-1">Book Free Home Survey in {data.city}</h3>
+          <p class="text-xs text-slate-500 mt-1">Our certified local master tiler can visit your {data.postcode} property within 24-48 hours.</p>
+        </div>
+
+        <form action="/quote" method="GET" class="space-y-4">
+          <input type="hidden" name="city" value={data.city} />
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Your Postcode in {data.city}</label>
+            <input type="text" name="postcode" value={data.postcode} required class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm font-medium focus:ring-2 focus:ring-sky-500 uppercase" placeholder="e.g. RG1 2AB" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Project Type</label>
+            <select name="service" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm">
+              <option value="bathroom" selected={data.service_slug === 'bathroom-tiling'}>Full Bathroom Renovation</option>
+              <option value="kitchen" selected={data.service_slug === 'kitchen-tiling'}>Kitchen Splashback / Walls</option>
+              <option value="floor" selected={data.service_slug === 'floor-tiling'}>Floor Tiling & Underfloor Heating</option>
+              <option value="wetroom" selected={data.service_slug === 'wet-room-installation'}>Walk-In Wet Room Tanking</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full bg-sky-700 hover:bg-sky-800 text-white font-bold py-3 rounded-lg shadow text-sm transition">
+            Check Tiler Availability & Pricing →
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Badges Bar -->
+  <TrustBadges />
+
+  <!-- Main Content Body -->
+  <section class="max-w-6xl mx-auto px-4 py-12 space-y-12">
+    <!-- Calculator Component -->
+    <PriceCalculator city={data.city} postcode={data.postcode} />
+
+    <!-- Quality Checklist -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8">
+      <h2 class="text-2xl font-bold text-slate-900 mb-4">Our {data.service_name} Standards in {data.city}</h2>
+      <p class="text-sm text-slate-600 mb-6">Every project in {data.city} ({data.county}) is completed to British Standard BS 5385 guidelines with rigorous quality control:</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {data.checklist.map((item: string) => (
+          <div class="flex items-start space-x-3 p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span class="text-emerald-600 font-bold mt-0.5">✓</span>
+            <span class="text-xs text-slate-700 font-medium leading-relaxed">{item}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Nearby Areas Coverage Block (pSEO Internal Mesh) -->
+    <div class="bg-slate-100 rounded-xl p-6 border border-slate-200">
+      <h3 class="text-lg font-bold text-slate-900 mb-2">Neighbouring Areas We Cover from {data.city}</h3>
+      <p class="text-xs text-slate-600 mb-4">Our mobile team operates across {data.county} and neighbouring districts within 35 miles:</p>
+      <div class="flex flex-wrap gap-2">
+        {data.nearby_areas.map((area: any) => (
+          <a href={`/${data.service_slug}/${area.slug}`} class="text-xs bg-white hover:bg-sky-50 text-slate-700 hover:text-sky-800 border border-slate-300 px-3 py-1.5 rounded-md font-medium transition">
+            {area.city} ({area.postcode}) • {area.dist_miles} miles
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
