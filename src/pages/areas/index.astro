@@ -1,0 +1,29 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import dataset from '../../data/tiling_pseo_dataset.json';
+
+// Extract unique cities and group by region
+const allCities = [...new Map(dataset.map(item => [item.city_slug, { city: item.city, slug: item.city_slug, region: item.region }])).values()];
+const regions = [...new Set(allCities.map(c => c.region))].sort();
+---
+<Layout title="Areas We Cover | ApprovedTilers.co.uk" description="Find a verified master tiler in your local area. We cover all major UK cities and London boroughs.">
+  <div class="max-w-6xl mx-auto px-4 py-16">
+    <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Areas We Cover</h1>
+    <p class="text-lg text-slate-600 mb-12">Our network of verified tilers operates across the United Kingdom. Select your region below to find local specialists.</p>
+    
+    <div class="space-y-12">
+      {regions.map((region) => (
+        <div>
+          <h2 class="text-2xl font-bold text-slate-800 mb-6 border-b pb-2">{region}</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {allCities.filter(c => c.region === region).sort((a,b) => a.city.localeCompare(b.city)).map((city) => (
+              <a href={`/bathroom-tiling/${city.slug}`} class="text-sm text-slate-600 hover:text-sky-700 font-medium transition">
+                Tilers in {city.city}
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</Layout>

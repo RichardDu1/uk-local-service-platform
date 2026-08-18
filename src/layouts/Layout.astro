@@ -55,10 +55,10 @@ const { title, description, schema } = Astro.props;
 
         <div class="flex items-center space-x-6">
           <nav class="hidden md:flex space-x-6 text-sm font-medium text-slate-600">
-            <a href="/#services" class="hover:text-sky-700 transition">Services</a>
+            <a href="/services" class="hover:text-sky-700 transition">Services</a>
             <a href="/pricing" class="hover:text-sky-700 transition">Price Guide</a>
-            <a href="/#areas" class="hover:text-sky-700 transition">Areas Covered</a>
-            <a href="/#reviews" class="hover:text-sky-700 transition">Reviews</a>
+            <a href="/areas" class="hover:text-sky-700 transition">Areas Covered</a>
+            <a href="/reviews" class="hover:text-sky-700 transition">Reviews</a>
           </nav>
           <a href="/quote" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-md shadow-sm transition text-sm flex items-center">
             Get Free Quote
@@ -86,27 +86,39 @@ const { title, description, schema } = Astro.props;
         <div>
           <h4 class="text-sm font-semibold text-white uppercase tracking-wider mb-3">Popular Services</h4>
           <ul class="space-y-2 text-xs">
-            <li><a href="/bathroom-tiling/reading" class="hover:text-white transition">Bathroom Tiling & Renovation</a></li>
-            <li><a href="/kitchen-tiling/reading" class="hover:text-white transition">Kitchen Splashbacks & Floors</a></li>
-            <li><a href="/floor-tiling/reading" class="hover:text-white transition">Floor Tiling & Underfloor Heating</a></li>
-            <li><a href="/wet-room-installation/reading" class="hover:text-white transition">Wet Room Tanking & Waterproofing</a></li>
+            <li><a href="/services" class="hover:text-white transition">All Tiling Services</a></li>
+            <li><a href="/bathroom-tiling/london" class="hover:text-white transition">Bathroom Tiling</a></li>
+            <li><a href="/kitchen-tiling/manchester" class="hover:text-white transition">Kitchen Splashbacks</a></li>
+            <li><a href="/victorian-floor-tiling/london" class="hover:text-white transition">Victorian Floor Tiling</a></li>
           </ul>
         </div>
         <div>
-          <h4 class="text-sm font-semibold text-white uppercase tracking-wider mb-3">Top Coverage Areas</h4>
+          <h4 class="text-sm font-semibold text-white uppercase tracking-wider mb-3">Company</h4>
           <ul class="space-y-2 text-xs">
-            <li><a href="/bathroom-tiling/reading" class="hover:text-white transition">Tilers in Reading (RG)</a></li>
-            <li><a href="/bathroom-tiling/oxford" class="hover:text-white transition">Tilers in Oxford (OX)</a></li>
-            <li><a href="/bathroom-tiling/guildford" class="hover:text-white transition">Tilers in Guildford (GU)</a></li>
-            <li><a href="/bathroom-tiling/birmingham" class="hover:text-white transition">Tilers in Birmingham (B)</a></li>
+            <li><a href="/about" class="hover:text-white transition">About Us</a></li>
+            <li><a href="/contact" class="hover:text-white transition">Contact Us</a></li>
+            <li><a href="/areas" class="hover:text-white transition">Areas Covered</a></li>
+            <li><a href="/reviews" class="hover:text-white transition">Customer Reviews</a></li>
           </ul>
         </div>
         <div>
-          <h4 class="text-sm font-semibold text-white uppercase tracking-wider mb-3">Trust & Security</h4>
+          <h4 class="text-sm font-semibold text-white uppercase tracking-wider mb-3">Legal & Security</h4>
+          <ul class="space-y-2 text-xs mb-4">
+            <li><a href="/privacy" class="hover:text-white transition">Privacy & Cookie Policy</a></li>
+            <li><a href="/terms" class="hover:text-white transition">Terms & Conditions</a></li>
+          </ul>
           <p class="text-xs text-slate-400">All member tilers are verified with £2M+ Public Liability Insurance and backed by our 12-Month Workmanship Guarantee.</p>
           <div class="mt-4 text-xs text-slate-500">
             © 2026 ApprovedTilers.co.uk. All rights reserved.
           </div>
+        </div>
+      </div>
+      
+      <!-- Cookie Consent Banner placeholder (basic CSS-only hidden by default or handled via JS later if needed) -->
+      <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-slate-800 border-t border-slate-700 text-slate-300 p-4 z-50 transform transition-transform translate-y-0">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p class="text-xs text-center sm:text-left">We use cookies to ensure you get the best experience on our website. By continuing to use the site, you agree to our <a href="/privacy" class="text-sky-400 underline hover:text-sky-300">Privacy & Cookie Policy</a>.</p>
+          <button onclick="document.getElementById('cookie-banner').style.display='none'" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold py-2 px-6 rounded whitespace-nowrap">Got it!</button>
         </div>
       </div>
     </footer>
