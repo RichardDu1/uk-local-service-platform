@@ -177,6 +177,21 @@ const allServices = [...new Map(dataset.map(item => [item.service_slug, { name: 
       </div>
     )}
 
+    
+    <!-- NEW: Cross-Service Internal Mesh (Other services in this city) -->
+    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm mt-8">
+      <h3 class="text-lg font-bold text-slate-900 mb-2">Other Tiling Services in {data.city}</h3>
+      <p class="text-xs text-slate-600 mb-4">Looking for something else? Our {data.city} tilers also specialise in:</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+        {allServices.filter(svc => svc.slug !== data.service_slug).map((svc: any) => (
+          <a href={`/${svc.slug}/${data.city_slug}`} class="flex items-center space-x-2 text-sm text-slate-700 hover:text-sky-700 font-medium group transition">
+            <span class="text-sky-400 group-hover:text-sky-600">→</span>
+            <span>{svc.name}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+
     <!-- Nearby Areas Coverage Block (pSEO Internal Mesh) -->
     <div class="bg-slate-100 rounded-xl p-6 border border-slate-200">
       <h3 class="text-lg font-bold text-slate-900 mb-2">Neighbouring Areas We Cover from {data.city}</h3>
