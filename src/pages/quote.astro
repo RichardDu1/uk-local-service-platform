@@ -96,7 +96,7 @@ import TrustBadges from '../components/TrustBadges.astro';
 
     try {
       // POST directly to the unified Cloudflare Worker Form Hub (Chatwoot + D1 + Resend)
-      await fetch('https://roamglade-form-hub.dwx168200.workers.dev/api/leads?service=tiling&list_id=10', {
+      await fetch('https://roamglade-form-hub.dwx168200.workers.dev/api/leads?service=tiling&list_id=10&inbox_id=wSE3K4odsBvsv6gYzeLTh9et', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
