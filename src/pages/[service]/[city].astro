@@ -15,6 +15,9 @@ export async function getStaticPaths() {
 }
 
 const { data } = Astro.props;
+
+// For the select dropdown, get unique services
+const allServices = [...new Map(dataset.map(item => [item.service_slug, { name: item.service_name, slug: item.service_slug }])).values()];
 ---
 
 <Layout title={data.h1 + " | 100% Fixed Price Quotes"} description={data.meta_description} schema={data.schema}>
@@ -29,8 +32,15 @@ const { data } = Astro.props;
           {data.h1}
         </h1>
         <p class="text-slate-300 text-base leading-relaxed">
-          {data.summary} Tailored specifically for {data.house_type_context} across {data.city}. 
+          {data.summary}
         </p>
+        
+        <!-- NEW: Local Pain Points Block -->
+        <div class="bg-slate-800/50 border-l-4 border-amber-500 p-4 rounded-r-lg mt-4">
+          <p class="text-sm text-slate-300 italic leading-relaxed">
+            "{data.local_pain_points}"
+          </p>
+        </div>
 
         <!-- Bullet Highlights -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 text-xs text-slate-200">
@@ -48,7 +58,7 @@ const { data } = Astro.props;
           </div>
           <div class="flex items-center space-x-2">
             <svg class="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            <span>100% Fixed Price — No Rogue Extras</span>
+            <span>100% Fixed Price - No Rogue Extras</span>
           </div>
         </div>
 
@@ -77,14 +87,13 @@ const { data } = Astro.props;
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">Project Type</label>
             <select name="service" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm">
-              <option value="bathroom" selected={data.service_slug === 'bathroom-tiling'}>Full Bathroom Renovation</option>
-              <option value="kitchen" selected={data.service_slug === 'kitchen-tiling'}>Kitchen Splashback / Walls</option>
-              <option value="floor" selected={data.service_slug === 'floor-tiling'}>Floor Tiling & Underfloor Heating</option>
-              <option value="wetroom" selected={data.service_slug === 'wet-room-installation'}>Walk-In Wet Room Tanking</option>
+              {allServices.map((svc: any) => (
+                <option value={svc.slug} selected={data.service_slug === svc.slug}>{svc.name}</option>
+              ))}
             </select>
           </div>
           <button type="submit" class="w-full bg-sky-700 hover:bg-sky-800 text-white font-bold py-3 rounded-lg shadow text-sm transition">
-            Check Tiler Availability & Pricing →
+            Check Tiler Availability & Pricing &rarr;
           </button>
         </form>
       </div>
@@ -96,12 +105,51 @@ const { data } = Astro.props;
 
   <!-- Main Content Body -->
   <section class="max-w-6xl mx-auto px-4 py-12 space-y-12">
-    <!-- Calculator Component -->
-    <PriceCalculator city={data.city} postcode={data.postcode} />
+    
+    <!-- NEW: Local Pricing Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      <div class="bg-slate-50 border-b border-slate-200 p-6">
+        <h2 class="text-2xl font-bold text-slate-900">Average {data.service_name} Costs in {data.city} (2025)</h2>
+        <p class="text-sm text-slate-600 mt-2">Prices in the {data.county} area vary depending on materials and subfloor condition. Here is a rough guide:</p>
+      </div>
+      <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="border border-slate-100 rounded-lg p-5 text-center shadow-sm">
+            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wide">Small Room</h4>
+            <p class="text-2xl font-extrabold text-sky-700 mt-2">{data.price_table?.small_room || data.estimated_price_range}</p>
+          </div>
+          <div class="border border-sky-100 bg-sky-50/50 rounded-lg p-5 text-center shadow-sm relative">
+            <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-sky-600 text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase">Most Common</span>
+            <h4 class="text-sm font-bold text-sky-800 uppercase tracking-wide">Medium Room</h4>
+            <p class="text-2xl font-extrabold text-sky-900 mt-2">{data.price_table?.medium_room || "Enquire"}</p>
+          </div>
+          <div class="border border-slate-100 rounded-lg p-5 text-center shadow-sm">
+            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wide">Large / Complex</h4>
+            <p class="text-2xl font-extrabold text-sky-700 mt-2">{data.price_table?.large_room || "Enquire"}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW: 3-Step Process -->
+    <div class="py-8">
+      <h2 class="text-2xl font-bold text-slate-900 mb-8 text-center">Our 3-Step {data.service_name} Process</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {data.service_process?.map((step: any) => (
+          <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm relative pt-10">
+            <div class="absolute -top-5 left-6 bg-sky-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg shadow-lg border-4 border-white">
+              {step.step}
+            </div>
+            <h4 class="text-lg font-bold text-slate-800 mb-3">{step.title}</h4>
+            <p class="text-sm text-slate-600 leading-relaxed">{step.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
 
     <!-- Quality Checklist -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8">
-      <h2 class="text-2xl font-bold text-slate-900 mb-4">Our {data.service_name} Standards in {data.city}</h2>
+      <h2 class="text-2xl font-bold text-slate-900 mb-4">Our Technical Standards in {data.city}</h2>
       <p class="text-sm text-slate-600 mb-6">Every project in {data.city} ({data.county}) is completed to British Standard BS 5385 guidelines with rigorous quality control:</p>
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -113,6 +161,21 @@ const { data } = Astro.props;
         ))}
       </div>
     </div>
+    
+    <!-- NEW: Local FAQs -->
+    {data.faqs && (
+      <div class="py-6">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">Frequently Asked Questions ({data.city})</h2>
+        <div class="space-y-4">
+          {data.faqs.map((faq: any) => (
+            <div class="bg-white p-5 rounded-lg border border-slate-200">
+              <h4 class="font-bold text-slate-800 mb-2">{faq.q}</h4>
+              <p class="text-sm text-slate-600">{faq.a}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
 
     <!-- Nearby Areas Coverage Block (pSEO Internal Mesh) -->
     <div class="bg-slate-100 rounded-xl p-6 border border-slate-200">
@@ -121,7 +184,7 @@ const { data } = Astro.props;
       <div class="flex flex-wrap gap-2">
         {data.nearby_areas.map((area: any) => (
           <a href={`/${data.service_slug}/${area.slug}`} class="text-xs bg-white hover:bg-sky-50 text-slate-700 hover:text-sky-800 border border-slate-300 px-3 py-1.5 rounded-md font-medium transition">
-            {area.city} ({area.postcode}) • {area.dist_miles} miles
+            {area.city} ({area.postcode}) – {area.dist_miles} miles
           </a>
         ))}
       </div>
