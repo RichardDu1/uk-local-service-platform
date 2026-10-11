@@ -4,15 +4,47 @@ import dataset from '../../data/tiling_pseo_dataset.json';
 
 // Extract unique services
 const uniqueServices = [...new Map(dataset.map(item => [item.service_slug, { name: item.service_name, slug: item.service_slug, summary: item.summary }])).values()];
+
+const servicesSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://approvedtilers.co.uk/services#webpage",
+      "url": "https://approvedtilers.co.uk/services",
+      "name": "Our Specialist Tiling Services | Approved Tilers UK",
+      "description": "Explore our comprehensive range of professional wall and floor tiling services across the UK.",
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://approvedtilers.co.uk" },
+          { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://approvedtilers.co.uk/services" }
+        ]
+      }
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://approvedtilers.co.uk/services#list",
+      "name": "Approved Tilers Specialist Services",
+      "itemListElement": uniqueServices.map((svc, idx) => ({
+        "@type": "ListItem",
+        "position": idx + 1,
+        "name": svc.name,
+        "description": svc.summary,
+        "url": `https://approvedtilers.co.uk/${svc.slug}/westminster`
+      }))
+    }
+  ]
+};
 ---
-<Layout title="Our Tiling Services | ApprovedTilers.co.uk" description="Explore our comprehensive range of professional wall and floor tiling services across the UK.">
+<Layout title="Our Tiling Services | ApprovedTilers.co.uk" description="Explore our comprehensive range of professional wall and floor tiling services across the UK." schema={servicesSchema}>
   <div class="max-w-5xl mx-auto px-4 py-16">
     <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Specialist Tiling Services</h1>
     <p class="text-lg text-slate-600 mb-12">From luxury marble bathrooms to heavy-duty commercial floors, our network of vetted master tilers covers all aspects of professional tiling.</p>
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {uniqueServices.map((svc) => (
-        <a href={`/${svc.slug}/london`} class="block bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-sky-300 transition group">
+        <a href={`/${svc.slug}/westminster`} class="block bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-sky-300 transition group">
           <h3 class="text-lg font-bold text-slate-800 mb-2 group-hover:text-sky-700 transition">{svc.name}</h3>
           <p class="text-sm text-slate-600">{svc.summary}</p>
           <span class="inline-block mt-4 text-sky-600 font-semibold text-sm">View details &rarr;</span>

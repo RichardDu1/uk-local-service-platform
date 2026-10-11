@@ -3,9 +3,40 @@ interface Props {
   title: string;
   description: string;
   schema?: object;
+  canonical?: string;
+  ogType?: string;
 }
 
-const { title, description, schema } = Astro.props;
+const { title, description, schema, canonical, ogType = "website" } = Astro.props;
+
+const siteUrl = Astro.site ? Astro.site.href.replace(/\/$/, '') : 'https://approvedtilers.co.uk';
+const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).href;
+
+const baseOrgSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      "name": "Approved Tilers UK",
+      "url": siteUrl,
+      "logo": `${siteUrl}/favicon.svg`,
+      "description": "UK's verified trade network of master wall and floor tilers.",
+      "telephone": "+44-800-000-0000",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "GB"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      "url": siteUrl,
+      "name": "Approved Tilers UK",
+      "publisher": { "@id": `${siteUrl}/#organization` }
+    }
+  ]
+};
 ---
 
 <!DOCTYPE html>
@@ -16,9 +47,31 @@ const { title, description, schema } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- AI & LLM Search Engine Discovery Specification -->
+    <link rel="help" type="text/plain" href="/llms.txt" title="LLMs.txt Context" />
+
+    <!-- Indexing & Crawling Rules -->
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+    <!-- Open Graph Metadata -->
+    <meta property="og:site_name" content="Approved Tilers UK" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content="en_GB" />
+
+    <!-- Twitter Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Base Organization Schema -->
+    <script type="application/ld+json" set:html={JSON.stringify(baseOrgSchema)} />
+
+    <!-- Page Specific Schema -->
     {schema && (
       <script type="application/ld+json" set:html={JSON.stringify(schema)} />
     )}
@@ -87,9 +140,9 @@ const { title, description, schema } = Astro.props;
           <h4 class="text-sm font-semibold text-white uppercase tracking-wider mb-3">Popular Services</h4>
           <ul class="space-y-2 text-xs">
             <li><a href="/services" class="hover:text-white transition">All Tiling Services</a></li>
-            <li><a href="/bathroom-tiling/london" class="hover:text-white transition">Bathroom Tiling</a></li>
-            <li><a href="/kitchen-tiling/manchester" class="hover:text-white transition">Kitchen Splashbacks</a></li>
-            <li><a href="/victorian-floor-tiling/london" class="hover:text-white transition">Victorian Floor Tiling</a></li>
+            <li><a href="/bathroom-tiling/westminster" class="hover:text-white transition">Bathroom Tiling (London)</a></li>
+            <li><a href="/kitchen-tiling/manchester" class="hover:text-white transition">Kitchen Splashbacks (Manchester)</a></li>
+            <li><a href="/victorian-floor-tiling/westminster" class="hover:text-white transition">Victorian Floor Tiling (London)</a></li>
           </ul>
         </div>
         <div>

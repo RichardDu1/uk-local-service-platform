@@ -3,9 +3,66 @@ import Layout from '../layouts/Layout.astro';
 import TrustBadges from '../components/TrustBadges.astro';
 import towns from '../data/uk_towns.json';
 import services from '../data/services_config.json';
+
+const homeSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "HomeAndConstructionBusiness",
+      "@id": "https://approvedtilers.co.uk/#business",
+      "name": "Approved Tilers UK",
+      "url": "https://approvedtilers.co.uk",
+      "logo": "https://approvedtilers.co.uk/favicon.svg",
+      "image": "https://approvedtilers.co.uk/favicon.svg",
+      "description": "UK's verified trade network of master wall and floor tilers. £2M insured, 12-month workmanship guarantee, 100% fixed quotes.",
+      "telephone": "+44-800-000-0000",
+      "priceRange": "££",
+      "areaServed": {
+        "@type": "Country",
+        "name": "United Kingdom"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.96",
+        "reviewCount": "350",
+        "bestRating": "5"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://approvedtilers.co.uk/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does Approved Tilers protect UK homeowners against rogue traders?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Every tiler in our network is verified with minimum £2,000,000 public liability insurance, background-checked, and assessed against British Standard BS 5385. All quotes provided after the free survey are 100% fixed with a 12-month workmanship warranty."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What areas in the UK are covered by Approved Tilers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We operate nationwide across 84 major metropolitan regions including all 32 London Boroughs, the South East, Midlands, North West, Yorkshire, South West, Scotland, Wales, and Northern Ireland."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How quickly can I get a tiling quote?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Homeowners can submit their postcode and project details to receive a fast callback and arrange a free on-site survey inspection within 24–48 hours."
+          }
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="ApprovedTilers.co.uk | Verified Master Wall & Floor Tilers in the UK" description="Find top-rated, vetted master tilers in your local UK town. Fixed price quotes, £2M insured, 12-month guarantee. Bathroom, kitchen, floor & wet room tiling.">
+<Layout title="ApprovedTilers.co.uk | Verified Master Wall & Floor Tilers in the UK" description="Find top-rated, vetted master tilers in your local UK town. Fixed price quotes, £2M insured, 12-month guarantee. Bathroom, kitchen, floor & wet room tiling." schema={homeSchema}>
   <!-- Hero Banner -->
   <section class="bg-slate-900 text-white pt-16 pb-20 px-4">
     <div class="max-w-5xl mx-auto text-center space-y-6">

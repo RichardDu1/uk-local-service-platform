@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "generate:seo-geo": "node scripts/generate_seo_geo.mjs",
+    "build": "node scripts/generate_seo_geo.mjs && astro build",
     "preview": "astro preview"
   },
   "dependencies": {

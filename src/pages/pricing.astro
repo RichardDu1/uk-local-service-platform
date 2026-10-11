@@ -2,9 +2,56 @@
 import Layout from '../layouts/Layout.astro';
 import TrustBadges from '../components/TrustBadges.astro';
 import PriceCalculator from '../components/PriceCalculator.astro';
+
+const pricingSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://approvedtilers.co.uk/pricing#webpage",
+      "url": "https://approvedtilers.co.uk/pricing",
+      "name": "UK Tiling Price Guide 2026 | Transparent Labour & Material Costs",
+      "description": "Comprehensive guide to wall and floor tiling costs across the UK in 2026.",
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://approvedtilers.co.uk" },
+          { "@type": "ListItem", "position": 2, "name": "Price Guide", "item": "https://approvedtilers.co.uk/pricing" }
+        ]
+      }
+    },
+    {
+      "@type": "OfferCatalog",
+      "@id": "https://approvedtilers.co.uk/pricing#catalog",
+      "name": "UK Standard Tiling Rates & Benchmarks (2026)",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": { "@type": "Service", "name": "Kitchen Splashback Tiling" },
+          "priceSpecification": { "@type": "PriceSpecification", "priceCurrency": "GBP", "minPrice": "250", "maxPrice": "420" }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": { "@type": "Service", "name": "Standard Bathroom Wall & Floor Tiling" },
+          "priceSpecification": { "@type": "PriceSpecification", "priceCurrency": "GBP", "minPrice": "600", "maxPrice": "950" }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": { "@type": "Service", "name": "Large Floor Tiling" },
+          "priceSpecification": { "@type": "PriceSpecification", "priceCurrency": "GBP", "minPrice": "800", "maxPrice": "1400" }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": { "@type": "Service", "name": "Wet Room Tanking & Waterproofing" },
+          "priceSpecification": { "@type": "PriceSpecification", "priceCurrency": "GBP", "minPrice": "1200", "maxPrice": "1850" }
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="UK Tiling Price Guide 2026 | Transparent Labour & Material Costs" description="Comprehensive guide to wall and floor tiling costs across the UK in 2026. Daily labour rates, square metre prices, and full bathroom tiling breakdown.">
+<Layout title="UK Tiling Price Guide 2026 | Transparent Labour & Material Costs" description="Comprehensive guide to wall and floor tiling costs across the UK in 2026. Daily labour rates, square metre prices, and full bathroom tiling breakdown." schema={pricingSchema}>
   <div class="max-w-5xl mx-auto px-4 py-12 space-y-12">
     <div class="text-center max-w-2xl mx-auto">
       <span class="bg-sky-100 text-sky-800 text-xs font-bold px-3 py-1 rounded-full uppercase">Transparent Pricing</span>

@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import TrustBadges from '../../components/TrustBadges.astro';
 import PriceCalculator from '../../components/PriceCalculator.astro';
+import GeoFactSheet from '../../components/GeoFactSheet.astro';
 import dataset from '../../data/tiling_pseo_dataset.json';
 
 export async function getStaticPaths() {
@@ -18,9 +19,120 @@ const { data } = Astro.props;
 
 // For the select dropdown, get unique services
 const allServices = [...new Map(dataset.map(item => [item.service_slug, { name: item.service_name, slug: item.service_slug }])).values()];
+
+const pageUrl = `https://approvedtilers.co.uk/${data.service_slug}/${data.city_slug}`;
+
+const pageSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "HomeAndConstructionBusiness",
+      "@id": `${pageUrl}#business`,
+      "name": `Approved Tilers - ${data.service_name} in ${data.city}`,
+      "description": data.meta_description,
+      "url": pageUrl,
+      "telephone": "+44-800-000-0000",
+      "priceRange": data.estimated_price_range || "££",
+      "image": "https://approvedtilers.co.uk/favicon.svg",
+      "areaServed": {
+        "@type": "AdministrativeArea",
+        "name": `${data.city}, ${data.county}`
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": data.city,
+        "addressRegion": data.county,
+        "postalCode": data.postcode,
+        "addressCountry": "GB"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.96",
+        "reviewCount": "350",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    },
+    {
+      "@type": "Service",
+      "@id": `${pageUrl}#service`,
+      "name": data.service_name,
+      "serviceType": data.service_name,
+      "provider": {
+        "@id": `${pageUrl}#business`
+      },
+      "areaServed": {
+        "@type": "AdministrativeArea",
+        "name": data.city
+      },
+      "description": data.summary,
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "GBP",
+        "lowPrice": data.price_table?.small_room ? data.price_table.small_room.replace(/[^0-9]/g, '').slice(0, 3) : "400",
+        "highPrice": data.price_table?.large_room ? data.price_table.large_room.replace(/[^0-9]/g, '') : "1500",
+        "offerCount": "3"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumbs`,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://approvedtilers.co.uk"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Services",
+          "item": "https://approvedtilers.co.uk/services"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": data.service_name,
+          "item": `https://approvedtilers.co.uk/${data.service_slug}/london`
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": `${data.service_name} in ${data.city}`,
+          "item": pageUrl
+        }
+      ]
+    },
+    ...(data.faqs && data.faqs.length > 0 ? [{
+      "@type": "FAQPage",
+      "@id": `${pageUrl}#faq`,
+      "mainEntity": data.faqs.map((faq: any) => ({
+        "@type": "Question",
+        "name": faq.q,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.a
+        }
+      }))
+    }] : []),
+    ...(data.service_process && data.service_process.length > 0 ? [{
+      "@type": "HowTo",
+      "@id": `${pageUrl}#howto`,
+      "name": `Professional ${data.service_name} Process in ${data.city}`,
+      "description": `Step-by-step master tiling methodology for ${data.service_name} projects in ${data.city}.`,
+      "step": data.service_process.map((step: any, idx: number) => ({
+        "@type": "HowToStep",
+        "position": idx + 1,
+        "name": step.title,
+        "text": step.desc
+      }))
+    }] : [])
+  ]
+};
 ---
 
-<Layout title={data.h1 + " | 100% Fixed Price Quotes"} description={data.meta_description} schema={data.schema}>
+<Layout title={data.h1 + " | 100% Fixed Price Quotes"} description={data.meta_description} schema={pageSchema}>
   <!-- Hero Section -->
   <section class="bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white pt-12 pb-16 px-4 relative">
     <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -104,7 +216,21 @@ const allServices = [...new Map(dataset.map(item => [item.service_slug, { name: 
   <TrustBadges />
 
   <!-- Main Content Body -->
-  <section class="max-w-6xl mx-auto px-4 py-12 space-y-12">
+  <section class="max-w-6xl mx-auto px-4 py-8 space-y-10">
+
+    <!-- GEO Fact Sheet for Citability & BLUF -->
+    <GeoFactSheet
+      serviceName={data.service_name}
+      city={data.city}
+      county={data.county}
+      postcode={data.postcode}
+      region={data.region}
+      priceRange={data.estimated_price_range}
+      priceSmall={data.price_table?.small_room}
+      priceMed={data.price_table?.medium_room}
+      priceLarge={data.price_table?.large_room}
+      typicalDuration={data.typical_duration}
+    />
     
     <!-- NEW: Local Pricing Table -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
