@@ -1,0 +1,299 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const pageTitle = "Claim Your £50 Tiling Voucher & Match Local Vetted Trades | Approved Tilers UK";
+const pageDesc = "Congratulations! Your postcode qualifies for a £50 materials discount. Lock in your 100% fixed-price estimate with our certified local master tilers.";
+---
+
+<Layout title={pageTitle} description={pageDesc}>
+  <!-- Top Celebration Alert -->
+  <aside aria-label="Voucher Status" class="bg-emerald-600 text-white text-xs font-bold py-2.5 px-4 text-center shadow-md">
+    <div class="max-w-4xl mx-auto flex items-center justify-center space-x-2">
+      <span class="bg-white text-emerald-800 px-2 py-0.5 rounded text-[10px] uppercase font-extrabold">Postcode Verified</span>
+      <span>🎉 Match Found! 2 Approved Master Tilers Available in Your Area • Voucher Code <strong>AP50UK</strong> Applied</span>
+    </div>
+  </aside>
+
+  <main class="max-w-4xl mx-auto px-4 py-8 md:py-12">
+    <!-- Header with Countdown Timer -->
+    <div class="text-center space-y-3 mb-8">
+      <div class="inline-flex items-center space-x-2 bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">
+        <span>⏱️ Voucher Reserved For Next: <span id="countdown" class="font-extrabold text-red-600">14:59</span></span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+        Your Estimated Project Range & Local Tiler Match
+      </h1>
+      <p class="text-slate-600 text-sm max-w-xl mx-auto">
+        Review your preliminary trade pricing benchmark below. Complete your details to lock in your <strong>£50 Trade Voucher</strong> and arrange your free on-site survey.
+      </p>
+    </div>
+
+    <!-- Main Grid: Left Voucher + Pricing, Right Lead Form -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <!-- Left Column: Voucher Card & Scope Summary (5 cols) -->
+      <div class="lg:col-span-5 space-y-6">
+        <!-- Golden Voucher Box -->
+        <div class="bg-gradient-to-br from-amber-400 via-amber-300 to-amber-500 rounded-2xl p-6 text-slate-950 shadow-xl border-2 border-amber-300 relative overflow-hidden">
+          <div class="absolute -right-6 -bottom-6 opacity-10 text-9xl font-black">
+            £50
+          </div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="bg-slate-950 text-amber-300 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded">
+              OFFICIAL TRADE REBATE
+            </span>
+            <span class="font-mono text-xs font-bold text-slate-900 bg-white/70 px-2 py-0.5 rounded">
+              CODE: AP50UK
+            </span>
+          </div>
+
+          <div class="text-3xl sm:text-4xl font-black tracking-tight mb-1">
+            £50 OFF
+          </div>
+          <p class="text-xs font-medium text-slate-900 mb-4">
+            Valid towards tiles, adhesives, or waterproof tanking membranes on any approved tiling project over £300.
+          </p>
+
+          <div class="border-t border-slate-900/20 pt-3 text-[11px] flex justify-between items-center text-slate-800">
+            <span>Status: <strong class="text-emerald-900 font-bold">● Active & Reserved</strong></span>
+            <span>Issued by ApprovedTilers.co.uk</span>
+          </div>
+        </div>
+
+        <!-- Calculated Scope Card -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <h3 class="font-bold text-slate-900 text-sm border-b border-slate-100 pb-2">
+            Selected Project Breakdown
+          </h3>
+
+          <div class="space-y-3 text-xs">
+            <div class="flex justify-between">
+              <span class="text-slate-500">Service:</span>
+              <strong id="display-service" class="text-slate-900 text-right">Full Bathroom Tiling</strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Scope:</span>
+              <strong id="display-size" class="text-slate-900 text-right">Standard Room (9 - 20 m²)</strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Postcode Area:</span>
+              <strong id="display-postcode" class="text-sky-700 font-extrabold uppercase text-right">RG1 1AA</strong>
+            </div>
+            <div class="flex justify-between pt-2 border-t border-slate-100">
+              <span class="text-slate-500">Standard Trade Labour:</span>
+              <span id="display-guide" class="text-slate-800 font-bold">£550 - £950</span>
+            </div>
+            <div class="flex justify-between text-emerald-700 font-bold">
+              <span>Voucher Applied:</span>
+              <span>- £50.00</span>
+            </div>
+            <div class="flex justify-between pt-2 border-t-2 border-slate-900 font-extrabold text-sm text-slate-900">
+              <span>Adjusted Labour Estimate:</span>
+              <span id="display-net" class="text-emerald-700 font-black">£500 - £900</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Local Vetted Tradesmen Preview -->
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3">
+          <div class="flex items-center space-x-2 text-xs font-bold text-slate-800">
+            <span class="text-emerald-600">●</span>
+            <span>Matched Local Trades in Your Sector</span>
+          </div>
+          <div class="flex items-center space-x-3 p-3 bg-white rounded-xl border border-slate-100">
+            <div class="w-10 h-10 rounded-full bg-sky-700 text-white font-extrabold flex items-center justify-center text-sm">
+              MJ
+            </div>
+            <div class="text-xs">
+              <div class="font-bold text-slate-900">Marcus J. (Master Craftsman)</div>
+              <div class="text-slate-500 text-[11px]">18 yrs exp • BS 5385 Certified • £2M Insured</div>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 p-3 bg-white rounded-xl border border-slate-100">
+            <div class="w-10 h-10 rounded-full bg-emerald-700 text-white font-extrabold flex items-center justify-center text-sm">
+              AL
+            </div>
+            <div class="text-xs">
+              <div class="font-bold text-slate-900">Apex Tiling Solutions</div>
+              <div class="text-slate-500 text-[11px]">4.98/5 (92 reviews) • Laser alignment specialist</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Final Lead Capture Form (7 cols) -->
+      <div class="lg:col-span-7 bg-white rounded-2xl shadow-xl border border-slate-200 p-6 sm:p-8">
+        <!-- Success State Container -->
+        <div id="promo-success" class="hidden text-center py-8 space-y-4">
+          <div class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">
+            ✓
+          </div>
+          <h2 class="text-2xl font-extrabold text-slate-900">Voucher Confirmed & Matched!</h2>
+          <p class="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
+            Your £50 voucher code (<strong class="font-mono text-slate-900">AP50UK</strong>) has been locked to your property. Our approved specialist will contact you via WhatsApp / SMS within 30 minutes with an official fixed quotation.
+          </p>
+          <div class="pt-6 border-t border-slate-100">
+            <a href="/" class="inline-flex items-center space-x-2 bg-sky-700 hover:bg-sky-800 text-white font-bold px-6 py-3 rounded-xl transition text-sm">
+              <span>Return to ApprovedTilers.co.uk Homepage</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- The Actual Form -->
+        <form id="voucher-form" action="https://roamglade-form-hub.dwx168200.workers.dev/api/form?service=tiling&list_id=10&inbox_id=wSE3K4odsBvsv6gYzeLTh9et" method="POST" class="space-y-4">
+          <input type="hidden" name="source_title" value="PropellerAds Promo Funnel (AP50UK)" />
+          <input type="hidden" id="form-service" name="service" value="Full Bathroom Tiling" />
+          <input type="hidden" id="form-size" name="timeline" value="Within 2 Weeks" />
+          <input type="hidden" id="form-voucher" name="voucher_code" value="AP50UK" />
+
+          <div class="border-b border-slate-100 pb-3 mb-4">
+            <span class="text-xs font-bold uppercase text-sky-700">Final Step: Lock In Your Discount</span>
+            <h2 class="text-xl font-bold text-slate-900 mt-0.5">Where Should We Send Your Fixed Quote & Voucher?</h2>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="form-name" class="block text-xs font-bold uppercase text-slate-700 mb-1">Your Full Name *</label>
+              <input type="text" id="form-name" name="name" required placeholder="e.g. John Smith" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+            </div>
+
+            <div>
+              <label for="form-phone" class="block text-xs font-bold uppercase text-slate-700 mb-1">Mobile Phone (For Quote SMS) *</label>
+              <input type="tel" id="form-phone" name="phone" required placeholder="e.g. 07123 456789" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+            </div>
+          </div>
+
+          <div>
+            <label for="form-email" class="block text-xs font-bold uppercase text-slate-700 mb-1">Email Address *</label>
+            <input type="email" id="form-email" name="email" required placeholder="john.smith@example.co.uk" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="form-postcode" class="block text-xs font-bold uppercase text-slate-700 mb-1">Property Postcode *</label>
+              <input type="text" id="form-postcode" name="postcode" required placeholder="e.g. RG1 1AA" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm font-bold uppercase focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+            </div>
+
+            <div>
+              <label for="form-timeframe" class="block text-xs font-bold uppercase text-slate-700 mb-1">Preferred Timeframe</label>
+              <select id="form-timeframe" name="timeframe" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                <option value="Urgent (Next 48 Hours)">Urgent (Next 48 Hours)</option>
+                <option value="Within 2 Weeks" selected>Within 2 Weeks</option>
+                <option value="Within 1 Month">Within 1 Month</option>
+                <option value="Flexible / Just Budgeting">Flexible / Just Budgeting</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label for="form-notes" class="block text-xs font-bold uppercase text-slate-700 mb-1">Special Notes / Tile Details (Optional)</label>
+            <textarea id="form-notes" name="notes" rows="2" placeholder="e.g. Victorian pathway, herringbone splashback, subfloor needs levelling..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none"></textarea>
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" id="submit-btn" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-black py-4 rounded-xl shadow-lg hover:shadow-xl transition text-base flex items-center justify-center space-x-2 cursor-pointer">
+              <span>Claim £50 Voucher & Lock In Fixed Quote</span>
+              <span>→</span>
+            </button>
+            <p class="text-[11px] text-center text-slate-500 mt-2">
+              🛡️ No commitment. By submitting, you agree to receive your free quote from verified local trades.
+            </p>
+          </div>
+        </form>
+
+        <!-- Secondary Navigation / Return Link -->
+        <div class="mt-6 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">
+          <span>Need more information about our network?</span>
+          <a href="/" class="text-sky-700 hover:text-sky-900 font-bold inline-flex items-center space-x-1">
+            <span>Explore ApprovedTilers.co.uk Homepage</span>
+            <span>&rarr;</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // Read URL parameters from Page 1
+  const urlParams = new URLSearchParams(window.location.search);
+  const service = urlParams.get('service') || "Full Bathroom Tiling & Renovation";
+  const size = urlParams.get('size') || "Standard Room (9 - 20 sqm)";
+  const guide = urlParams.get('guide') || "£550 - £950";
+  const postcode = urlParams.get('postcode') || "RG1 1AA";
+
+  // Update UI Elements
+  const displayService = document.getElementById('display-service');
+  const displaySize = document.getElementById('display-size');
+  const displayPostcode = document.getElementById('display-postcode');
+  const displayGuide = document.getElementById('display-guide');
+  const displayNet = document.getElementById('display-net');
+
+  if (displayService) displayService.textContent = service;
+  if (displaySize) displaySize.textContent = size;
+  if (displayPostcode) displayPostcode.textContent = postcode;
+  if (displayGuide) displayGuide.textContent = guide;
+
+  // Calculate voucher deduction
+  const priceMatches = guide.match(/\d+/g);
+  if (priceMatches && priceMatches.length >= 2 && displayNet) {
+    const low = Math.max(100, parseInt(priceMatches[0], 10) - 50);
+    const high = Math.max(200, parseInt(priceMatches[1], 10) - 50);
+    displayNet.textContent = `£${low} - £${high}`;
+  }
+
+  // Pre-fill Form Fields
+  const formService = document.getElementById('form-service') as HTMLInputElement;
+  const formPostcode = document.getElementById('form-postcode') as HTMLInputElement;
+  if (formService) formService.value = `${service} (${size})`;
+  if (formPostcode) formPostcode.value = postcode;
+
+  // Simple 15-Minute Countdown Timer
+  let timeLeft = 14 * 60 + 59;
+  const countdownEl = document.getElementById('countdown');
+  const timer = setInterval(() => {
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      if (countdownEl) countdownEl.textContent = "00:00";
+      return;
+    }
+    const mins = Math.floor(timeLeft / 60);
+    const secs = timeLeft % 60;
+    if (countdownEl) {
+      countdownEl.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    timeLeft--;
+  }, 1000);
+
+  // AJAX Form Submission
+  const voucherForm = document.getElementById('voucher-form') as HTMLFormElement;
+  const successBox = document.getElementById('promo-success');
+  const submitBtn = document.getElementById('submit-btn');
+
+  voucherForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (submitBtn) {
+      submitBtn.setAttribute('disabled', 'true');
+      submitBtn.innerHTML = '<span>Locking In Your Voucher & Quote...</span>';
+    }
+
+    const formData = new FormData(voucherForm);
+    try {
+      const resp = await fetch(voucherForm.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (resp.ok) {
+        voucherForm.classList.add('hidden');
+        successBox?.classList.remove('hidden');
+      } else {
+        // Fallback to native post if worker responds non-200
+        voucherForm.submit();
+      }
+    } catch {
+      voucherForm.submit();
+    }
+  });
+</script>

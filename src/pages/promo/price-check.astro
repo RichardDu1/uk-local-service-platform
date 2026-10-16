@@ -1,0 +1,310 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const pageTitle = "2026 UK Home Tiling Voucher & Instant Price Check | Approved Tilers UK";
+const pageDesc = "Check if your UK postcode qualifies for our £50 material voucher & compare certified local tilers. Instant 30-second estimate with zero rogue trader surprises.";
+---
+
+<Layout title={pageTitle} description={pageDesc}>
+  <!-- Top Urgent Incentive Alert -->
+  <aside aria-label="Limited Promotion" class="bg-gradient-to-r from-amber-500 via-rose-500 to-amber-500 text-slate-950 text-xs font-bold py-2.5 px-4 text-center shadow-md animate-pulse">
+    <div class="max-w-4xl mx-auto flex items-center justify-center space-x-2">
+      <span class="bg-slate-950 text-amber-400 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-extrabold">Autumn 2026 Special</span>
+      <span>🔥 Check Postcode Eligibility: Free £50 Trade Material Voucher + 100% Fixed Price Quotes</span>
+    </div>
+  </aside>
+
+  <main class="max-w-4xl mx-auto px-4 py-8 md:py-12">
+    <!-- Headline Section -->
+    <div class="text-center space-y-3 mb-8">
+      <div class="inline-flex items-center space-x-2 bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">
+        <span>🛡️ Verified Master Tilers • £2M Insured • 12-Month Guarantee</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+        Planning a Tiling Project in the UK?<br />
+        <span class="text-sky-700 bg-clip-text">Get an Instant Fair-Price Check in 30 Seconds</span>
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto">
+        Stop overpaying rogue contractors. Calculate real trade labour rates, unlock local master tilers, and claim your exclusive <strong>£50 trade discount voucher</strong>.
+      </p>
+    </div>
+
+    <!-- Visual Interactive Card (Quiz Pre-lander Step 1) -->
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+      <!-- Progress Bar -->
+      <div class="bg-slate-100 h-2.5 w-full">
+        <div id="quiz-progress" class="bg-sky-600 h-2.5 w-1/3 transition-all duration-300"></div>
+      </div>
+
+      <div class="p-6 sm:p-8 md:p-10">
+        <!-- STEP 1: Room Type -->
+        <div id="step-1" class="quiz-step space-y-6">
+          <div class="text-center sm:text-left">
+            <span class="text-sky-600 font-bold text-xs uppercase tracking-wider">Step 1 of 3</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">What type of tiling work do you need?</h2>
+            <p class="text-xs text-slate-500">Select your project type to calibrate regional pricing.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Option 1: Bathroom -->
+            <button type="button" class="quiz-btn group text-left p-4 rounded-xl border-2 border-slate-200 hover:border-sky-600 hover:bg-sky-50 transition flex items-center space-x-4 cursor-pointer" data-service="Full Bathroom Tiling & Renovation" data-icon="🛁">
+              <div class="w-14 h-14 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-2xl group-hover:scale-105 transition flex-shrink-0">
+                🛁
+              </div>
+              <div class="flex-grow">
+                <h3 class="font-bold text-slate-900 text-sm sm:text-base group-hover:text-sky-700">Bathroom Walls & Floor</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Showers, wet rooms, anti-mould tanking & porcelain</p>
+              </div>
+              <span class="text-slate-300 group-hover:text-sky-600 text-xl font-bold">→</span>
+            </button>
+
+            <!-- Option 2: Kitchen -->
+            <button type="button" class="quiz-btn group text-left p-4 rounded-xl border-2 border-slate-200 hover:border-sky-600 hover:bg-sky-50 transition flex items-center space-x-4 cursor-pointer" data-service="Kitchen Splashbacks & Walls" data-icon="🍳">
+              <div class="w-14 h-14 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-2xl group-hover:scale-105 transition flex-shrink-0">
+                🍳
+              </div>
+              <div class="flex-grow">
+                <h3 class="font-bold text-slate-900 text-sm sm:text-base group-hover:text-sky-700">Kitchen Splashback & Floor</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Herringbone, metro tiles, heat-resistant cooktop backings</p>
+              </div>
+              <span class="text-slate-300 group-hover:text-sky-600 text-xl font-bold">→</span>
+            </button>
+
+            <!-- Option 3: Floor -->
+            <button type="button" class="quiz-btn group text-left p-4 rounded-xl border-2 border-slate-200 hover:border-sky-600 hover:bg-sky-50 transition flex items-center space-x-4 cursor-pointer" data-service="Living / Hallway Floor Tiling" data-icon="📐">
+              <div class="w-14 h-14 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl group-hover:scale-105 transition flex-shrink-0">
+                📐
+              </div>
+              <div class="flex-grow">
+                <h3 class="font-bold text-slate-900 text-sm sm:text-base group-hover:text-sky-700">Hallway & Living Floor</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Large format porcelain, underfloor heating, Ditra matting</p>
+              </div>
+              <span class="text-slate-300 group-hover:text-sky-600 text-xl font-bold">→</span>
+            </button>
+
+            <!-- Option 4: Victorian & Period -->
+            <button type="button" class="quiz-btn group text-left p-4 rounded-xl border-2 border-slate-200 hover:border-sky-600 hover:bg-sky-50 transition flex items-center space-x-4 cursor-pointer" data-service="Victorian & Period Geometric Floor Tiling" data-icon="🏛️">
+              <div class="w-14 h-14 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center text-2xl group-hover:scale-105 transition flex-shrink-0">
+                🏛️
+              </div>
+              <div class="flex-grow">
+                <h3 class="font-bold text-slate-900 text-sm sm:text-base group-hover:text-sky-700">Victorian & Period Pathway</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Geometric tesserae, encaustic restoration, front pathways</p>
+              </div>
+              <span class="text-slate-300 group-hover:text-sky-600 text-xl font-bold">→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: Project Size & Scope -->
+        <div id="step-2" class="quiz-step hidden space-y-6">
+          <div class="text-center sm:text-left">
+            <span class="text-sky-600 font-bold text-xs uppercase tracking-wider">Step 2 of 3</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">What is the approximate size of the area?</h2>
+            <p class="text-xs text-slate-500">Estimates are based on standard UK room dimensions.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <button type="button" class="size-btn p-5 rounded-xl border-2 border-slate-200 hover:border-sky-600 hover:bg-sky-50 transition text-center cursor-pointer" data-size="Small (Up to 8 sqm)" data-guide="£250 - £450">
+              <div class="text-2xl mb-2">📦</div>
+              <div class="font-bold text-slate-900 text-sm">Small Project</div>
+              <div class="text-xs text-slate-500 mt-1">Up to 8 m² (Splashback / Ensuite)</div>
+              <div class="mt-3 text-sky-700 font-extrabold text-xs bg-sky-100 py-1 rounded">Est. £250 - £450</div>
+            </button>
+
+            <button type="button" class="size-btn p-5 rounded-xl border-2 border-sky-600 bg-sky-50/50 transition text-center cursor-pointer relative" data-size="Medium (9 - 20 sqm)" data-guide="£550 - £950">
+              <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-sky-700 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Most Common</span>
+              <div class="text-2xl mb-2">🏠</div>
+              <div class="font-bold text-slate-900 text-sm">Standard Room</div>
+              <div class="text-xs text-slate-500 mt-1">9 - 20 m² (Full Bathroom / Kitchen)</div>
+              <div class="mt-3 text-sky-700 font-extrabold text-xs bg-sky-100 py-1 rounded">Est. £550 - £950</div>
+            </button>
+
+            <button type="button" class="size-btn p-5 rounded-xl border-2 border-slate-200 hover:border-sky-600 hover:bg-sky-50 transition text-center cursor-pointer" data-size="Large (20+ sqm)" data-guide="£950 - £1,800+">
+              <div class="text-2xl mb-2">🏰</div>
+              <div class="font-bold text-slate-900 text-sm">Large / Full Floor</div>
+              <div class="text-xs text-slate-500 mt-1">20+ m² (Open plan / Whole house)</div>
+              <div class="mt-3 text-sky-700 font-extrabold text-xs bg-sky-100 py-1 rounded">Est. £950 - £1,800+</div>
+            </button>
+          </div>
+
+          <div class="flex justify-between items-center pt-2">
+            <button type="button" id="back-to-step-1" class="text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center">
+              ← Change Service
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Postcode & Matching Pre-check -->
+        <div id="step-3" class="quiz-step hidden space-y-6">
+          <div class="text-center sm:text-left">
+            <span class="text-sky-600 font-bold text-xs uppercase tracking-wider">Step 3 of 3 • Final Verification</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">Where is the property located?</h2>
+            <p class="text-xs text-slate-500">Enter your UK postcode to check available vetted tilers and apply your £50 voucher.</p>
+          </div>
+
+          <!-- Selected Summary Badge -->
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-wrap justify-between items-center gap-3 text-xs">
+            <div class="flex items-center space-x-2">
+              <span id="summary-icon" class="text-xl">🛁</span>
+              <div>
+                <span class="text-slate-500 block text-[11px]">Selected Project:</span>
+                <strong id="summary-service" class="text-slate-900 font-bold">Full Bathroom Tiling</strong>
+              </div>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[11px]">Area Scope:</span>
+              <strong id="summary-size" class="text-slate-900 font-bold">Standard Room (9 - 20 m²)</strong>
+            </div>
+            <div class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded">
+              🎟️ £50 Voucher Unlocked
+            </div>
+          </div>
+
+          <form id="postcode-check-form" class="space-y-4">
+            <div>
+              <label for="input-postcode" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Enter UK Postcode *</label>
+              <div class="flex flex-col sm:flex-row gap-2">
+                <input 
+                  type="text" 
+                  id="input-postcode" 
+                  required 
+                  placeholder="e.g. RG1 1AA, SW1A 1AA, M1 1AE..." 
+                  class="flex-grow bg-slate-50 border-2 border-slate-300 rounded-xl px-4 py-3.5 text-base font-extrabold text-slate-900 uppercase focus:border-sky-600 focus:outline-none"
+                />
+                <button 
+                  type="submit" 
+                  id="btn-reveal-quote" 
+                  class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-8 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition text-base flex items-center justify-center space-x-2 whitespace-nowrap cursor-pointer"
+                >
+                  <span>See Price Breakdown & Tilers</span>
+                  <span>→</span>
+                </button>
+              </div>
+              <p class="text-[11px] text-slate-500 mt-2">🔒 100% Free & No-Obligation. We never spam or sell your details.</p>
+            </div>
+          </form>
+
+          <div class="flex justify-between items-center pt-2">
+            <button type="button" id="back-to-step-2" class="text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center">
+              ← Change Room Size
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Proof & Comparison Feature Grid -->
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-lg flex items-center justify-center text-lg font-bold mb-3">
+          ✓
+        </div>
+        <h4 class="font-bold text-slate-900 text-sm mb-1">100% Fixed Price Quotes</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Never deal with contractor surprises or hidden day rates. Every quote is confirmed in writing before a single tile is cut.
+        </p>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <div class="w-10 h-10 bg-sky-100 text-sky-700 rounded-lg flex items-center justify-center text-lg font-bold mb-3">
+          🛡️
+        </div>
+        <h4 class="font-bold text-slate-900 text-sm mb-1">£2,000,000 Insurance</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Every master craftsman in our nationwide network carries verified Public Liability Insurance and conforms to BS 5385 standards.
+        </p>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <div class="w-10 h-10 bg-amber-100 text-amber-700 rounded-lg flex items-center justify-center text-lg font-bold mb-3">
+          ⭐
+        </div>
+        <h4 class="font-bold text-slate-900 text-sm mb-1">12-Month Guarantee</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Enjoy complete peace of mind. All floor leveling, waterproof tanking, laser alignment and grouting is backed by our full warranty.
+        </p>
+      </div>
+    </div>
+
+    <!-- Verified Homeowner Testimonial Reel -->
+    <div class="mt-8 bg-slate-900 text-white rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="space-y-2 text-center sm:text-left">
+        <div class="flex justify-center sm:justify-start text-amber-400 text-sm">★★★★★</div>
+        <blockquote class="text-sm italic text-slate-300">
+          "I had quotes from random tilers varying by £800 for the same ensuite. Approved Tilers got me a vetted specialist who fixed the price, used the £50 voucher, and finished in 3 days. Superb laser-cut finish."
+        </blockquote>
+        <div class="text-xs text-slate-400 font-semibold">— David P., Homeowner in Reading (RG1)</div>
+      </div>
+      <div class="text-center sm:text-right flex-shrink-0">
+        <div class="text-2xl font-extrabold text-amber-400">4.96 / 5.0</div>
+        <div class="text-[11px] text-slate-400">Over 350+ Verified Reviews</div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  let selectedService = "Full Bathroom Tiling & Renovation";
+  let selectedIcon = "🛁";
+  let selectedSize = "Medium (9 - 20 sqm)";
+  let selectedGuide = "£550 - £950";
+
+  const step1 = document.getElementById('step-1');
+  const step2 = document.getElementById('step-2');
+  const step3 = document.getElementById('step-3');
+  const progressBar = document.getElementById('quiz-progress');
+
+  // Step 1 Click
+  document.querySelectorAll('.quiz-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedService = btn.getAttribute('data-service') || selectedService;
+      selectedIcon = btn.getAttribute('data-icon') || selectedIcon;
+
+      step1?.classList.add('hidden');
+      step2?.classList.remove('hidden');
+      if (progressBar) progressBar.style.width = '66%';
+    });
+  });
+
+  // Step 2 Click
+  document.querySelectorAll('.size-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedSize = btn.getAttribute('data-size') || selectedSize;
+      selectedGuide = btn.getAttribute('data-guide') || selectedGuide;
+
+      const summaryServiceEl = document.getElementById('summary-service');
+      const summarySizeEl = document.getElementById('summary-size');
+      const summaryIconEl = document.getElementById('summary-icon');
+
+      if (summaryServiceEl) summaryServiceEl.textContent = selectedService;
+      if (summarySizeEl) summarySizeEl.textContent = selectedSize;
+      if (summaryIconEl) summaryIconEl.textContent = selectedIcon;
+
+      step2?.classList.add('hidden');
+      step3?.classList.remove('hidden');
+      if (progressBar) progressBar.style.width = '100%';
+    });
+  });
+
+  // Back Navigation
+  document.getElementById('back-to-step-1')?.addEventListener('click', () => {
+    step2?.classList.add('hidden');
+    step1?.classList.remove('hidden');
+    if (progressBar) progressBar.style.width = '33%';
+  });
+
+  document.getElementById('back-to-step-2')?.addEventListener('click', () => {
+    step3?.classList.add('hidden');
+    step2?.classList.remove('hidden');
+    if (progressBar) progressBar.style.width = '66%';
+  });
+
+  // Form Submission -> Navigate to Page 2 with params
+  document.getElementById('postcode-check-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const postcode = (document.getElementById('input-postcode') as HTMLInputElement)?.value.trim() || 'RG1 1AA';
+    const targetUrl = `/promo/voucher-claim?service=${encodeURIComponent(selectedService)}&size=${encodeURIComponent(selectedSize)}&guide=${encodeURIComponent(selectedGuide)}&postcode=${encodeURIComponent(postcode)}&voucher=AP50UK`;
+    window.location.href = targetUrl;
+  });
+</script>
