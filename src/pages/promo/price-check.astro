@@ -264,6 +264,12 @@ const pageDesc = "Check if your UK postcode qualifies for our £50 material vouc
       step1?.classList.add('hidden');
       step2?.classList.remove('hidden');
       if (progressBar) progressBar.style.width = '66%';
+
+      // PostHog Tracking: Step 1 Funnel
+      (window as any).posthog?.capture('ad_quiz_step1_service_selected', {
+        service: selectedService,
+        step: 1
+      });
     });
   });
 
@@ -284,6 +290,14 @@ const pageDesc = "Check if your UK postcode qualifies for our £50 material vouc
       step2?.classList.add('hidden');
       step3?.classList.remove('hidden');
       if (progressBar) progressBar.style.width = '100%';
+
+      // PostHog Tracking: Step 2 Funnel
+      (window as any).posthog?.capture('ad_quiz_step2_size_selected', {
+        service: selectedService,
+        size: selectedSize,
+        guide: selectedGuide,
+        step: 2
+      });
     });
   });
 
@@ -304,6 +318,17 @@ const pageDesc = "Check if your UK postcode qualifies for our £50 material vouc
   document.getElementById('postcode-check-form')?.addEventListener('submit', (e) => {
     e.preventDefault();
     const postcode = (document.getElementById('input-postcode') as HTMLInputElement)?.value.trim() || 'RG1 1AA';
+
+    // PostHog Tracking: Step 3 Funnel Completed
+    (window as any).posthog?.capture('ad_quiz_step3_postcode_submitted', {
+      service: selectedService,
+      size: selectedSize,
+      guide: selectedGuide,
+      postcode: postcode,
+      voucher: 'AP50UK',
+      step: 3
+    });
+
     const targetUrl = `/promo/voucher-claim?service=${encodeURIComponent(selectedService)}&size=${encodeURIComponent(selectedSize)}&guide=${encodeURIComponent(selectedGuide)}&postcode=${encodeURIComponent(postcode)}&voucher=AP50UK`;
     window.location.href = targetUrl;
   });

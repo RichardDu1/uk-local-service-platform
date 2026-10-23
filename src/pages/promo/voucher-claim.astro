@@ -234,6 +234,15 @@ const pageDesc = "Congratulations! Your postcode qualifies for a £50 materials 
   if (displayPostcode) displayPostcode.textContent = postcode;
   if (displayGuide) displayGuide.textContent = guide;
 
+  // PostHog Tracking: Voucher Claim Page Loaded
+  (window as any).posthog?.capture('ad_voucher_page_viewed', {
+    service,
+    size,
+    guide,
+    postcode,
+    voucher: 'AP50UK'
+  });
+
   // Calculate voucher deduction
   const priceMatches = guide.match(/\d+/g);
   if (priceMatches && priceMatches.length >= 2 && displayNet) {
@@ -278,6 +287,19 @@ const pageDesc = "Congratulations! Your postcode qualifies for a £50 materials 
     }
 
     const formData = new FormData(voucherForm);
+    const email = formData.get('email')?.toString();
+    const phone = formData.get('phone')?.toString();
+    const name = formData.get('name')?.toString();
+
+    // PostHog Tracking: Lead Form Submit Attempt
+    (window as any).posthog?.capture('ad_voucher_submit_attempt', {
+      service,
+      size,
+      postcode,
+      has_email: Boolean(email),
+      has_phone: Boolean(phone)
+    });
+
     try {
       const resp = await fetch(voucherForm.action, {
         method: 'POST',
@@ -288,11 +310,33 @@ const pageDesc = "Congratulations! Your postcode qualifies for a £50 materials 
       if (resp.ok) {
         voucherForm.classList.add('hidden');
         successBox?.classList.remove('hidden');
+
+        // PostHog Tracking: Lead Conversion Success & User Identify
+        if (email || phone) {
+          (window as any).posthog?.identify(email || phone, {
+            name,
+            email,
+            phone,
+            postcode,
+            service
+          });
+        }
+
+        (window as any).posthog?.capture('ad_lead_conversion_success', {
+          service,
+          size,
+          postcode,
+          voucher: 'AP50UK',
+          discount_value: 50,
+          currency: 'GBP'
+        });
       } else {
         // Fallback to native post if worker responds non-200
+        (window as any).posthog?.capture('ad_lead_conversion_fallback_post');
         voucherForm.submit();
       }
     } catch {
+      (window as any).posthog?.capture('ad_lead_conversion_fallback_error');
       voucherForm.submit();
     }
   });

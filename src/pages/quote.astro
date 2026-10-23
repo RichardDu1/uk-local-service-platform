@@ -177,11 +177,30 @@ import TrustBadges from '../components/TrustBadges.astro';
         if (response.ok && result.success) {
           form.classList.add('hidden');
           if (successMsg) successMsg.classList.remove('hidden');
+
+          // PostHog Tracking: Organic Lead Form Conversion
+          const phone = payload.phone?.toString();
+          const email = payload.email?.toString();
+          if (phone || email) {
+            (window as any).posthog?.identify(phone || email, {
+              name: payload.full_name,
+              phone,
+              email,
+              postcode: payload.postcode,
+              service: payload.service
+            });
+          }
+          (window as any).posthog?.capture('quote_form_converted_success', {
+            service: payload.service,
+            postcode: payload.postcode,
+            timeframe: payload.timeframe
+          });
         } else {
           throw new Error(result.error || 'Server error (' + response.status + ')');
         }
       } catch (err) {
         console.warn('AJAX submit failed, falling back to native POST...', err);
+        (window as any).posthog?.capture('quote_form_fallback_post');
         // Fallback: If fetch had any issue (e.g. adblocker blocking fetch), submit natively!
         form.submit();
       }
