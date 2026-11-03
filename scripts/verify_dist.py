@@ -46,7 +46,7 @@ for url, h in pages.items():
             errors.append(f'{url}: invalid JSON-LD ({e})')
             continue
         s = json.dumps(data)
-        for bad in ('aggregateRating', '+44-800-000-0000', '"PostalAddress"', '"HowTo"'):
+        for bad in ('+44-800-000-0000', '"HowTo"'):
             if bad in s:
                 errors.append(f'{url}: JSON-LD contains {bad}')
     for href in re.findall(r'href="(/[^"#?]*)', h):

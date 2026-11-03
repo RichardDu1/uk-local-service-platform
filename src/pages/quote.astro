@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import TrustBadges from '../components/TrustBadges.astro';
+import { services } from '../lib/site';
+import { FALLBACK_EMAIL } from '../lib/leadForm';
 ---
 
 <Layout title="Get a Free Fixed Tiling Quote | ApprovedTilers.co.uk" description="Get a free, transparent fixed-price quote from an approved local master tiler. £2M insured. 12-month workmanship guarantee.">
@@ -22,9 +24,10 @@ import TrustBadges from '../components/TrustBadges.astro';
         </div>
       </div>
 
-      <!-- Lead Capture Form (Dual-Engine: Native POST + AJAX Enhanced) -->
-      <form id="lead-form" action="https://roamglade-form-hub.dwx168200.workers.dev/api/form?service=tiling&list_id=10&inbox_id=wSE3K4odsBvsv6gYzeLTh9et" method="POST" class="space-y-6">
-        <input type="hidden" name="source_title" value="Approved Tilers UK" />
+      <!-- Lead Capture Form (JSON POST to the Highland Travel group form system) -->
+      <noscript><p class="mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg">This form needs JavaScript. You can also email your postcode, job details and phone number to <a class="underline" href={`mailto:${FALLBACK_EMAIL}`}>{FALLBACK_EMAIL}</a>.</p></noscript>
+      <form id="lead-form" class="space-y-6">
+        <input type="hidden" id="lead-city" name="city" value="" />
 
         <!-- 1. Postcode -->
         <div>
@@ -34,25 +37,12 @@ import TrustBadges from '../components/TrustBadges.astro';
 
         <!-- 2. Service Type -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">2. Service Type *</label>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <label class="border border-slate-200 rounded-lg p-3 flex items-center space-x-2.5 text-xs font-medium cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 has-[:checked]:font-bold">
-              <input type="radio" name="service" id="srv-bathroom" value="Full Bathroom Tiling & Renovation" checked class="text-sky-600 focus:ring-sky-500" />
-              <span>Full Bathroom Tiling</span>
-            </label>
-            <label class="border border-slate-200 rounded-lg p-3 flex items-center space-x-2.5 text-xs font-medium cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 has-[:checked]:font-bold">
-              <input type="radio" name="service" id="srv-kitchen" value="Kitchen Splashbacks & Walls" class="text-sky-600 focus:ring-sky-500" />
-              <span>Kitchen Splashback & Walls</span>
-            </label>
-            <label class="border border-slate-200 rounded-lg p-3 flex items-center space-x-2.5 text-xs font-medium cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 has-[:checked]:font-bold">
-              <input type="radio" name="service" id="srv-floor" value="Living / Hallway Floor Tiling" class="text-sky-600 focus:ring-sky-500" />
-              <span>Floor Tiling & Underfloor Heating</span>
-            </label>
-            <label class="border border-slate-200 rounded-lg p-3 flex items-center space-x-2.5 text-xs font-medium cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 has-[:checked]:font-bold">
-              <input type="radio" name="service" id="srv-wetroom" value="Walk-in Wet Room Waterproofing & Tanking" class="text-sky-600 focus:ring-sky-500" />
-              <span>Wet Room Tanking & Shower</span>
-            </label>
-          </div>
+          <label for="lead-service" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">2. Service Type *</label>
+          <select id="lead-service" name="service" required class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-medium focus:ring-2 focus:ring-sky-500">
+            {services.map((svc, idx) => (
+              <option value={svc.name} data-slug={svc.slug} selected={idx === 0}>{svc.name}</option>
+            ))}
+          </select>
         </div>
 
         <!-- 3. Area Size & Timeframe -->
@@ -75,6 +65,8 @@ import TrustBadges from '../components/TrustBadges.astro';
               <option value="Next Month (2 - 4 Weeks)">Next Month (2 - 4 Weeks)</option>
               <option value="Flexible / Just Planning">Flexible / Just Getting Quotes</option>
             </select>
+            <label for="lead-start-date" class="block text-[11px] font-semibold text-slate-600 mt-2 mb-1">Preferred start date (optional)</label>
+            <input type="date" id="lead-start-date" name="start_date" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-medium focus:ring-2 focus:ring-sky-500" />
           </div>
         </div>
 
@@ -112,97 +104,109 @@ import TrustBadges from '../components/TrustBadges.astro';
     </div>
   </div>
 
-  <script is:inline>
-    // 1. Check if redirected back with success
-    if (window.location.search.includes('success=true')) {
-      document.getElementById('lead-form')?.classList.add('hidden');
-      document.getElementById('success-message')?.classList.remove('hidden');
-    }
+  <script>
+    import { submitLead, buildMessage, FALLBACK_EMAIL } from '../lib/leadForm';
 
-    // 2. Auto-prefill form from URL query parameters
+    const form = document.getElementById('lead-form') as HTMLFormElement | null;
+    const serviceSelect = document.getElementById('lead-service') as HTMLSelectElement | null;
+
+    // 1. Auto-prefill form from URL query parameters (city pages pass ?city=&postcode=&service=<slug>)
     try {
       const params = new URLSearchParams(window.location.search);
       const pPostcode = params.get('postcode') || params.get('city');
+      const pCity = params.get('city');
       const pService = params.get('service');
 
-      if (pPostcode) {
-        const pcInput = document.getElementById('lead-postcode');
-        if (pcInput && !pcInput.value) pcInput.value = pPostcode;
-      }
+      const pcInput = document.getElementById('lead-postcode') as HTMLInputElement | null;
+      if (pPostcode && pcInput && !pcInput.value) pcInput.value = pPostcode;
+      const cityInput = document.getElementById('lead-city') as HTMLInputElement | null;
+      if (pCity && cityInput) cityInput.value = pCity;
 
-      if (pService) {
-        const srvMap = {
-          'bathroom': 'srv-bathroom',
-          'kitchen': 'srv-kitchen',
-          'floor': 'srv-floor',
-          'wetroom': 'srv-wetroom'
-        };
-        const targetId = srvMap[pService.toLowerCase()];
-        if (targetId) {
-          const radio = document.getElementById(targetId);
-          if (radio) radio.checked = true;
-        }
+      if (pService && serviceSelect) {
+        const legacy: Record<string, string> = { bathroom: 'bathroom-tiling', kitchen: 'kitchen-tiling', floor: 'floor-tiling', wetroom: 'wet-room-tiling' };
+        const key = pService.toLowerCase();
+        const slug = legacy[key] || key;
+        const match = [...serviceSelect.options].find((o) => o.dataset.slug === slug || o.value.toLowerCase() === key);
+        if (match) match.selected = true;
       }
     } catch (e) {}
 
-    // 3. Progressive AJAX Submission
-    const form = document.getElementById('lead-form');
-    form?.addEventListener('submit', async function(e) {
-      // If JS is active, intercept and submit via fetch with FormData
+    // 2. Submit as JSON; only show success when the endpoint answers 2xx.
+    form?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
-      const btn = document.getElementById('submit-btn');
+
+      const btn = document.getElementById('submit-btn') as HTMLButtonElement | null;
       const btnText = document.getElementById('btn-text');
       const errorBox = document.getElementById('error-box');
       const successMsg = document.getElementById('success-message');
+      const originalText = btnText?.innerText;
 
-      if (errorBox) errorBox.classList.add('hidden');
+      errorBox?.classList.add('hidden');
       if (btnText) btnText.innerText = 'Submitting your request...';
       if (btn) btn.disabled = true;
 
-      try {
-        const formData = new FormData(form);
-        const payload = Object.fromEntries(formData.entries());
-        payload.timestamp = new Date().toISOString();
+      const fd = new FormData(form);
+      const get = (k: string) => (fd.get(k) || '').toString().trim();
+      const payload = {
+        name: get('name'),
+        phone: get('phone'),
+        email: get('email'),
+        postcode: get('postcode').toUpperCase(),
+        city: get('city'),
+        service: get('service'),
+        area_size: get('area_size'),
+        timeframe: get('timeframe'),
+        start_date: get('start_date'),
+        notes: get('notes'),
+      };
 
-        const endpoint = form.getAttribute('action');
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+      const ok = await submitLead({
+        name: payload.name,
+        phone: payload.phone,
+        email: payload.email,
+        address: payload.postcode,
+        start_date: payload.start_date,
+        tour: `${payload.service} - ${payload.city || payload.postcode}`,
+        contact_method: 'Phone / WhatsApp',
+        message: buildMessage([
+          ['Source', 'ApprovedTilers.co.uk quote form'],
+          ['Service', payload.service],
+          ['Town/City', payload.city],
+          ['Postcode', payload.postcode],
+          ['Area size', payload.area_size],
+          ['Timeframe', payload.timeframe],
+          ['Job details', payload.notes],
+          ['Page', window.location.href],
+        ]),
+      });
 
-        const result = await response.json();
+      if (ok) {
+        form.classList.add('hidden');
+        successMsg?.classList.remove('hidden');
 
-        if (response.ok && result.success) {
-          form.classList.add('hidden');
-          if (successMsg) successMsg.classList.remove('hidden');
-
-          // PostHog Tracking: Organic Lead Form Conversion
-          const phone = payload.phone?.toString();
-          const email = payload.email?.toString();
-          if (phone || email) {
-            (window as any).posthog?.identify(phone || email, {
-              name: payload.full_name,
-              phone,
-              email,
-              postcode: payload.postcode,
-              service: payload.service
-            });
-          }
-          (window as any).posthog?.capture('quote_form_converted_success', {
-            service: payload.service,
+        // PostHog Tracking: Organic Lead Form Conversion
+        if (payload.phone || payload.email) {
+          (window as any).posthog?.identify(payload.phone || payload.email, {
+            name: payload.name,
+            phone: payload.phone,
+            email: payload.email,
             postcode: payload.postcode,
-            timeframe: payload.timeframe
+            service: payload.service
           });
-        } else {
-          throw new Error(result.error || 'Server error (' + response.status + ')');
         }
-      } catch (err) {
-        console.warn('AJAX submit failed, falling back to native POST...', err);
+        (window as any).posthog?.capture('quote_form_converted_success', {
+          service: payload.service,
+          postcode: payload.postcode,
+          timeframe: payload.timeframe
+        });
+      } else {
         (window as any).posthog?.capture('quote_form_fallback_post');
-        // Fallback: If fetch had any issue (e.g. adblocker blocking fetch), submit natively!
-        form.submit();
+        if (errorBox) {
+          errorBox.innerHTML = `Sorry, we couldn't send your request just now. Please try again, or email your postcode, job details and phone number to <a class="underline font-bold" href="mailto:${FALLBACK_EMAIL}">${FALLBACK_EMAIL}</a>.`;
+          errorBox.classList.remove('hidden');
+        }
+        if (btnText && originalText) btnText.innerText = originalText;
+        if (btn) btn.disabled = false;
       }
     });
   </script>

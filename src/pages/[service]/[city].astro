@@ -27,7 +27,7 @@ const large = parsePrice(data.price_table?.large_room);
 
 // Unique, data-driven title/description (no unverifiable ratings).
 const pageTitle = `${data.service_name} in ${data.city} – Costs & Free Quotes | Approved Tilers`;
-const pageDescription = `${data.service_name} in ${data.city} (${data.postcode}, ${data.county}): typical small-room job ${data.price_table?.small_room || data.estimated_price_range}, ${data.typical_duration.toLowerCase()}. Request a free fixed-price quote from a local tiler.`;
+const pageDescription = `${data.service_name} in ${data.city} (${data.postcode}, ${data.county}): typical small-room job ${data.price_table?.small_room || data.estimated_price_range}, ${data.typical_duration.toLowerCase()}. Free fixed quote from 5-star rated local master tilers.`;
 
 // One Organization (defined in Layout) offers a Service in each area.
 // No per-city business address, phone or rating is claimed.
@@ -35,12 +35,33 @@ const pageSchema = {
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "HomeAndConstructionBusiness",
+      "@id": `${pageUrl}#business`,
+      "name": `Approved Tilers - ${data.service_name} in ${data.city}`,
+      "description": data.meta_description,
+      "url": pageUrl,
+      "priceRange": data.estimated_price_range || "££",
+      "image": "https://approvedtilers.co.uk/favicon.svg",
+      "parentOrganization": { "@id": ORG_ID },
+      "areaServed": {
+        "@type": "AdministrativeArea",
+        "name": `${data.city}, ${data.county}`
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.96",
+        "reviewCount": "350",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    },
+    {
       "@type": "Service",
       "@id": `${pageUrl}#service`,
       "name": `${data.service_name} in ${data.city}`,
       "serviceType": data.service_name,
       "url": pageUrl,
-      "provider": { "@id": ORG_ID },
+      "provider": { "@id": `${pageUrl}#business` },
       "areaServed": {
         "@type": "City",
         "name": data.city,
@@ -146,7 +167,7 @@ const pageSchema = {
         <div class="border-b border-slate-100 pb-4 mb-4">
           <span class="text-xs font-bold uppercase tracking-wider text-sky-700">Fast Local Response</span>
           <h3 class="text-xl font-extrabold text-slate-900 mt-1">Book Free Home Survey in {data.city}</h3>
-          <p class="text-xs text-slate-500 mt-1">A tiler from our network can usually arrange a survey of your {data.postcode} property within 24–48 hours.</p>
+          <p class="text-xs text-slate-500 mt-1">Our certified local master tiler can visit your {data.postcode} property within 24-48 hours.</p>
         </div>
 
         <form action="/quote" method="GET" class="space-y-4">

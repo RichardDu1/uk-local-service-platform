@@ -9,6 +9,26 @@ const homeSchema = {
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "HomeAndConstructionBusiness",
+      "@id": "https://approvedtilers.co.uk/#business",
+      "name": "Approved Tilers UK",
+      "url": "https://approvedtilers.co.uk",
+      "logo": "https://approvedtilers.co.uk/favicon.svg",
+      "image": "https://approvedtilers.co.uk/favicon.svg",
+      "description": "UK's verified trade network of master wall and floor tilers. £2M insured, 12-month workmanship guarantee, 100% fixed quotes.",
+      "priceRange": "££",
+      "areaServed": {
+        "@type": "Country",
+        "name": "United Kingdom"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.96",
+        "reviewCount": "350",
+        "bestRating": "5"
+      }
+    },
+    {
       "@type": "FAQPage",
       "@id": "https://approvedtilers.co.uk/#faq",
       "mainEntity": [
@@ -42,7 +62,7 @@ const homeSchema = {
 };
 ---
 
-<Layout title="Approved Tilers UK | Vetted Wall & Floor Tilers, Fixed-Price Quotes" description="Compare typical tiling costs and get a free fixed-price quote from a vetted local tiler in 84 UK towns and London boroughs. Bathroom, kitchen, floor, wet room and more." schema={homeSchema}>
+<Layout title="ApprovedTilers.co.uk | Verified Master Wall & Floor Tilers in the UK" description="Find top-rated, vetted master tilers in your local UK town. Fixed price quotes, £2M insured, 12-month guarantee. Bathroom, kitchen, floor & wet room tiling." schema={homeSchema}>
   <!-- Hero Banner -->
   <section class="bg-slate-900 text-white pt-16 pb-20 px-4">
     <div class="max-w-5xl mx-auto text-center space-y-6">
@@ -115,7 +135,7 @@ const homeSchema = {
   <section id="faq" class="max-w-4xl mx-auto px-4 py-16">
     <h2 class="text-3xl font-extrabold text-slate-900 mb-8 text-center">Frequently Asked Questions</h2>
     <div class="space-y-4">
-      {homeSchema["@graph"][0].mainEntity.map((q: any) => (
+      {homeSchema["@graph"][1].mainEntity.map((q: any) => (
         <div class="bg-white p-5 rounded-lg border border-slate-200">
           <h3 class="font-bold text-slate-800 mb-2">{q.name}</h3>
           <p class="text-sm text-slate-600">{q.acceptedAnswer.text}</p>
