@@ -1,8 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import TrustBadges from '../components/TrustBadges.astro';
-import towns from '../data/uk_towns.json';
-import services from '../data/services_config.json';
+import { services, cities } from '../lib/site';
+
+const searchIndex = cities.map((c) => ({ s: c.slug, n: c.city.toLowerCase(), p: c.postcode.toLowerCase() }));
 
 const homeSchema = {
   "@context": "https://schema.org",
@@ -15,7 +16,6 @@ const homeSchema = {
       "logo": "https://approvedtilers.co.uk/favicon.svg",
       "image": "https://approvedtilers.co.uk/favicon.svg",
       "description": "UK's verified trade network of master wall and floor tilers. £2M insured, 12-month workmanship guarantee, 100% fixed quotes.",
-      "telephone": "+44-800-000-0000",
       "priceRange": "££",
       "areaServed": {
         "@type": "Country",
@@ -78,6 +78,7 @@ const homeSchema = {
 
       <!-- Postcode Search Bar -->
       <div class="max-w-xl mx-auto bg-white p-2 rounded-xl shadow-2xl flex flex-col sm:flex-row gap-2 mt-8">
+        <label for="home-postcode" class="sr-only">Postcode or town</label>
         <input type="text" id="home-postcode" placeholder="Enter your Postcode or Town (e.g. Reading, RG1)..." class="flex-grow text-slate-900 px-4 py-3 text-sm rounded-lg focus:outline-none" />
         <button id="home-search-btn" class="bg-sky-700 hover:bg-sky-800 text-white font-bold px-6 py-3 rounded-lg text-sm transition">
           Find Local Tiler
@@ -103,8 +104,8 @@ const homeSchema = {
           </div>
           <h3 class="text-lg font-bold text-slate-900 mb-2">{srv.name}</h3>
           <p class="text-xs text-slate-600 leading-relaxed mb-4">{srv.summary}</p>
-          <a href={`/${srv.slug}/reading`} class="text-xs font-bold text-sky-700 hover:text-sky-900 flex items-center">
-            View Pricing & Details →
+          <a href={`/${srv.slug}`} class="text-xs font-bold text-sky-700 hover:text-sky-900 flex items-center">
+            View Prices & Locations →
           </a>
         </div>
       ))}
@@ -120,7 +121,7 @@ const homeSchema = {
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-        {towns.map((town: any) => (
+        {cities.map((town) => (
           <a href={`/bathroom-tiling/${town.slug}`} class="bg-white hover:bg-sky-50 border border-slate-200 p-3 rounded-lg text-center text-xs font-medium text-slate-800 hover:text-sky-800 shadow-sm transition">
             <span class="block font-bold">{town.city}</span>
             <span class="text-[10px] text-slate-400">{town.postcode} • {town.county}</span>
@@ -129,13 +130,33 @@ const homeSchema = {
       </div>
     </div>
   </section>
+
+  <!-- Visible FAQ (mirrors the FAQPage structured data above) -->
+  <section id="faq" class="max-w-4xl mx-auto px-4 py-16">
+    <h2 class="text-3xl font-extrabold text-slate-900 mb-8 text-center">Frequently Asked Questions</h2>
+    <div class="space-y-4">
+      {homeSchema["@graph"][1].mainEntity.map((q: any) => (
+        <div class="bg-white p-5 rounded-lg border border-slate-200">
+          <h3 class="font-bold text-slate-800 mb-2">{q.name}</h3>
+          <p class="text-sm text-slate-600">{q.acceptedAnswer.text}</p>
+        </div>
+      ))}
+    </div>
+  </section>
 </Layout>
 
-<script>
-  document.getElementById('home-search-btn')?.addEventListener('click', () => {
-    const val = (document.getElementById('home-postcode') as HTMLInputElement)?.value.toLowerCase().trim();
-    if (val) {
-      window.location.href = `/bathroom-tiling/reading`;
-    }
-  });
+<script is:inline define:vars={{ searchIndex }}>
+  // Match a typed town or postcode district to a local page; otherwise go to the quote form.
+  function homeSearch() {
+    var raw = document.getElementById('home-postcode').value.trim();
+    if (!raw) return;
+    var val = raw.toLowerCase();
+    var outward = val.replace(/\s+/g, ' ').split(' ')[0];
+    var hit = searchIndex.find(function (c) { return c.n === val || c.s === val.replace(/\s+/g, '-'); })
+      || searchIndex.find(function (c) { return c.p === outward; })
+      || searchIndex.find(function (c) { return c.n.indexOf(val) === 0; });
+    window.location.href = hit ? '/bathroom-tiling/' + hit.s : '/quote?postcode=' + encodeURIComponent(raw.toUpperCase());
+  }
+  document.getElementById('home-search-btn').addEventListener('click', homeSearch);
+  document.getElementById('home-postcode').addEventListener('keydown', function (e) { if (e.key === 'Enter') homeSearch(); });
 </script>

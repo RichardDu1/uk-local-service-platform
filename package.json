@@ -7,7 +7,8 @@
     "start": "astro dev",
     "generate:seo-geo": "node scripts/generate_seo_geo.mjs",
     "build": "node scripts/generate_seo_geo.mjs && astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "verify": "python3 scripts/verify_dist.py dist"
   },
   "dependencies": {
     "astro": "^4.15.0",
