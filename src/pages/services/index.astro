@@ -31,23 +31,23 @@ const servicesSchema = {
         "position": idx + 1,
         "name": svc.name,
         "description": svc.summary,
-        "url": `https://approvedtilers.co.uk/${svc.slug}/westminster`
+        "url": `https://approvedtilers.co.uk/${svc.slug}`
       }))
     }
   ]
 };
 ---
-<Layout title="Our Tiling Services | ApprovedTilers.co.uk" description="Explore our comprehensive range of professional wall and floor tiling services across the UK." schema={servicesSchema}>
+<Layout title="Tiling Services: Bathroom, Kitchen, Floor & Wet Room | Approved Tilers" description="All 10 tiling services we arrange quotes for – bathroom, kitchen, floor, wet room, Victorian, marble, mosaic, regrouting, commercial and patio tiling – with typical UK costs." schema={servicesSchema}>
   <div class="max-w-5xl mx-auto px-4 py-16">
     <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Specialist Tiling Services</h1>
     <p class="text-lg text-slate-600 mb-12">From luxury marble bathrooms to heavy-duty commercial floors, our network of vetted master tilers covers all aspects of professional tiling.</p>
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {uniqueServices.map((svc) => (
-        <a href={`/${svc.slug}/westminster`} class="block bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-sky-300 transition group">
+        <a href={`/${svc.slug}`} class="block bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-sky-300 transition group">
           <h3 class="text-lg font-bold text-slate-800 mb-2 group-hover:text-sky-700 transition">{svc.name}</h3>
           <p class="text-sm text-slate-600">{svc.summary}</p>
-          <span class="inline-block mt-4 text-sky-600 font-semibold text-sm">View details &rarr;</span>
+          <span class="inline-block mt-4 text-sky-600 font-semibold text-sm">Prices &amp; locations &rarr;</span>
         </a>
       ))}
     </div>

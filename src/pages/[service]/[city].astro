@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import TrustBadges from '../../components/TrustBadges.astro';
 import PriceCalculator from '../../components/PriceCalculator.astro';
 import GeoFactSheet from '../../components/GeoFactSheet.astro';
-import dataset from '../../data/tiling_pseo_dataset.json';
+import { dataset, services, absUrl, parsePrice, SITE_URL, ORG_ID } from '../../lib/site';
 
 export async function getStaticPaths() {
   return dataset.map((item) => ({
@@ -18,90 +18,53 @@ export async function getStaticPaths() {
 const { data } = Astro.props;
 
 // For the select dropdown, get unique services
-const allServices = [...new Map(dataset.map(item => [item.service_slug, { name: item.service_name, slug: item.service_slug }])).values()];
+const allServices = services;
 
-const pageUrl = `https://approvedtilers.co.uk/${data.service_slug}/${data.city_slug}`;
+const pageUrl = absUrl(`/${data.service_slug}/${data.city_slug}`);
+const hubUrl = absUrl(`/${data.service_slug}`);
+const small = parsePrice(data.price_table?.small_room);
+const large = parsePrice(data.price_table?.large_room);
 
+// Unique, data-driven title/description (no unverifiable ratings).
+const pageTitle = `${data.service_name} in ${data.city} – Costs & Free Quotes | Approved Tilers`;
+const pageDescription = `${data.service_name} in ${data.city} (${data.postcode}, ${data.county}): typical small-room job ${data.price_table?.small_room || data.estimated_price_range}, ${data.typical_duration.toLowerCase()}. Request a free fixed-price quote from a local tiler.`;
+
+// One Organization (defined in Layout) offers a Service in each area.
+// No per-city business address, phone or rating is claimed.
 const pageSchema = {
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "HomeAndConstructionBusiness",
-      "@id": `${pageUrl}#business`,
-      "name": `Approved Tilers - ${data.service_name} in ${data.city}`,
-      "description": data.meta_description,
-      "url": pageUrl,
-      "telephone": "+44-800-000-0000",
-      "priceRange": data.estimated_price_range || "££",
-      "image": "https://approvedtilers.co.uk/favicon.svg",
-      "areaServed": {
-        "@type": "AdministrativeArea",
-        "name": `${data.city}, ${data.county}`
-      },
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": data.city,
-        "addressRegion": data.county,
-        "postalCode": data.postcode,
-        "addressCountry": "GB"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.96",
-        "reviewCount": "350",
-        "bestRating": "5",
-        "worstRating": "1"
-      }
-    },
-    {
       "@type": "Service",
       "@id": `${pageUrl}#service`,
-      "name": data.service_name,
+      "name": `${data.service_name} in ${data.city}`,
       "serviceType": data.service_name,
-      "provider": {
-        "@id": `${pageUrl}#business`
-      },
+      "url": pageUrl,
+      "provider": { "@id": ORG_ID },
       "areaServed": {
-        "@type": "AdministrativeArea",
-        "name": data.city
+        "@type": "City",
+        "name": data.city,
+        "containedInPlace": { "@type": "AdministrativeArea", "name": data.county }
       },
-      "description": data.summary,
-      "offers": {
-        "@type": "AggregateOffer",
-        "priceCurrency": "GBP",
-        "lowPrice": data.price_table?.small_room ? data.price_table.small_room.replace(/[^0-9]/g, '').slice(0, 3) : "400",
-        "highPrice": data.price_table?.large_room ? data.price_table.large_room.replace(/[^0-9]/g, '') : "1500",
-        "offerCount": "3"
-      }
+      "description": pageDescription,
+      ...(small.low ? {
+        "offers": {
+          "@type": "AggregateOffer",
+          "priceCurrency": "GBP",
+          "lowPrice": small.low,
+          ...(large.low ? { "highPrice": large.low } : {}),
+          "description": "Indicative labour price range; final price is fixed after a free survey."
+        }
+      } : {})
     },
     {
       "@type": "BreadcrumbList",
       "@id": `${pageUrl}#breadcrumbs`,
       "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://approvedtilers.co.uk"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Services",
-          "item": "https://approvedtilers.co.uk/services"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": data.service_name,
-          "item": `https://approvedtilers.co.uk/${data.service_slug}/london`
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "name": `${data.service_name} in ${data.city}`,
-          "item": pageUrl
-        }
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
+        { "@type": "ListItem", "position": 2, "name": "Services", "item": absUrl('/services') },
+        { "@type": "ListItem", "position": 3, "name": data.service_name, "item": hubUrl },
+        { "@type": "ListItem", "position": 4, "name": data.city, "item": pageUrl }
       ]
     },
     ...(data.faqs && data.faqs.length > 0 ? [{
@@ -115,25 +78,21 @@ const pageSchema = {
           "text": faq.a
         }
       }))
-    }] : []),
-    ...(data.service_process && data.service_process.length > 0 ? [{
-      "@type": "HowTo",
-      "@id": `${pageUrl}#howto`,
-      "name": `Professional ${data.service_name} Process in ${data.city}`,
-      "description": `Step-by-step master tiling methodology for ${data.service_name} projects in ${data.city}.`,
-      "step": data.service_process.map((step: any, idx: number) => ({
-        "@type": "HowToStep",
-        "position": idx + 1,
-        "name": step.title,
-        "text": step.desc
-      }))
     }] : [])
   ]
 };
 ---
 
-<Layout title={data.h1 + " | 100% Fixed Price Quotes"} description={data.meta_description} schema={pageSchema}>
+<Layout title={pageTitle} description={pageDescription} schema={pageSchema}>
   <!-- Hero Section -->
+  <nav aria-label="Breadcrumb" class="bg-slate-900 text-slate-400 text-xs px-4 pt-4">
+    <ol class="max-w-6xl mx-auto flex flex-wrap gap-1">
+      <li><a href="/" class="hover:text-white">Home</a> ›</li>
+      <li><a href="/services" class="hover:text-white">Services</a> ›</li>
+      <li><a href={`/${data.service_slug}`} class="hover:text-white">{data.service_name}</a> ›</li>
+      <li class="text-slate-200" aria-current="page">{data.city}</li>
+    </ol>
+  </nav>
   <section class="bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white pt-12 pb-16 px-4 relative">
     <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
       <div class="lg:col-span-7 space-y-5">
@@ -187,7 +146,7 @@ const pageSchema = {
         <div class="border-b border-slate-100 pb-4 mb-4">
           <span class="text-xs font-bold uppercase tracking-wider text-sky-700">Fast Local Response</span>
           <h3 class="text-xl font-extrabold text-slate-900 mt-1">Book Free Home Survey in {data.city}</h3>
-          <p class="text-xs text-slate-500 mt-1">Our certified local master tiler can visit your {data.postcode} property within 24-48 hours.</p>
+          <p class="text-xs text-slate-500 mt-1">A tiler from our network can usually arrange a survey of your {data.postcode} property within 24–48 hours.</p>
         </div>
 
         <form action="/quote" method="GET" class="space-y-4">
@@ -235,8 +194,8 @@ const pageSchema = {
     <!-- NEW: Local Pricing Table -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
       <div class="bg-slate-50 border-b border-slate-200 p-6">
-        <h2 class="text-2xl font-bold text-slate-900">Average {data.service_name} Costs in {data.city} (2025)</h2>
-        <p class="text-sm text-slate-600 mt-2">Prices in the {data.county} area vary depending on materials and subfloor condition. Here is a rough guide:</p>
+        <h2 class="text-2xl font-bold text-slate-900">Typical {data.service_name} Costs in {data.city}</h2>
+        <p class="text-sm text-slate-600 mt-2">Prices in the {data.county} area vary depending on materials and subfloor condition. Indicative labour ranges (your final price is fixed after a free survey):</p>
       </div>
       <div class="p-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -320,12 +279,12 @@ const pageSchema = {
 
     <!-- Nearby Areas Coverage Block (pSEO Internal Mesh) -->
     <div class="bg-slate-100 rounded-xl p-6 border border-slate-200">
-      <h3 class="text-lg font-bold text-slate-900 mb-2">Neighbouring Areas We Cover from {data.city}</h3>
-      <p class="text-xs text-slate-600 mb-4">Our mobile team operates across {data.county} and neighbouring districts within 35 miles:</p>
+      <h3 class="text-lg font-bold text-slate-900 mb-2">{data.service_name} in Other {data.region} Areas</h3>
+      <p class="text-xs text-slate-600 mb-4">We also arrange {data.service_name.toLowerCase()} quotes elsewhere in {data.region}. <a href={`/${data.service_slug}`} class="text-sky-700 underline">See all {data.service_name.toLowerCase()} locations</a>.</p>
       <div class="flex flex-wrap gap-2">
         {data.nearby_areas.map((area: any) => (
           <a href={`/${data.service_slug}/${area.slug}`} class="text-xs bg-white hover:bg-sky-50 text-slate-700 hover:text-sky-800 border border-slate-300 px-3 py-1.5 rounded-md font-medium transition">
-            {area.city} ({area.postcode}) – {area.dist_miles} miles
+            {area.city} ({area.postcode})
           </a>
         ))}
       </div>

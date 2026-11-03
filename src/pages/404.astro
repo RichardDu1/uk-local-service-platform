@@ -1,0 +1,15 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { services } from '../lib/site';
+---
+<Layout title="Page Not Found | Approved Tilers UK" description="The page you were looking for could not be found." noindex canonical="https://approvedtilers.co.uk/404">
+  <div class="max-w-3xl mx-auto px-4 py-20 text-center">
+    <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Page not found</h1>
+    <p class="text-slate-600 mb-8">Sorry, that page doesn't exist. Try one of our services below, browse <a href="/areas" class="text-sky-700 underline">all areas</a>, or <a href="/quote" class="text-sky-700 underline">request a free quote</a>.</p>
+    <ul class="flex flex-wrap justify-center gap-2 text-sm">
+      {services.map((svc) => (
+        <li><a href={`/${svc.slug}`} class="inline-block bg-white border border-slate-200 rounded-md px-3 py-1.5 text-slate-700 hover:text-sky-700">{svc.name}</a></li>
+      ))}
+    </ul>
+  </div>
+</Layout>
