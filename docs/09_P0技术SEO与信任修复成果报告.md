@@ -90,3 +90,16 @@ curl -s -o /dev/null -w '%{http_code}\n' https://approvedtilers.co.uk/this-page-
 - 城市页正文去重、真实案例与图片（需上述业务决策与素材）；
 - 服务描述 `summary` 仍是一句泛化文案（如 "Premium bathroom tiling & renovation services delivered by vetted professionals."），建议所有者提供真实服务说明后改写；
 - 第三方实体信号（Google Business Profile、Checkatrade / TrustATrader、The Tile Association）。
+
+## 六、Cloudflare 预览站验证（https://5be06808.uk-local-service-platform.pages.dev）
+
+| 请求 | 结果 |
+|---|---|
+| `/services`、`/bathroom-tiling`、`/bathroom-tiling/leeds`、`/bathroom-tiling/kensington--chelsea`、`/areas`、`/pricing`、`/quote`（无斜杠） | **200** ✅（线上目前是 308） |
+| `/services/`、`/services.html`、`/bathroom-tiling/leeds/` | 308 → 无斜杠正式地址 ✅ |
+| `/does-not-exist` | **404** ✅（线上目前是 200 软 404） |
+| sitemap 随机抽 40 个 URL（换成预览域名） | 40/40 返回 200 ✅ |
+| 城市页 canonical | `https://approvedtilers.co.uk/bathroom-tiling/leeds`，与 sitemap 一致 ✅ |
+| 城市页 JSON-LD | 不含 `aggregateRating`、占位电话 ✅ |
+| `/promo/price-check` | `noindex, follow` ✅ |
+| sitemap lastmod | 均为 2026-11-03（本次提交改动了所有模板，属实；之后会随文件实际改动变化）|
