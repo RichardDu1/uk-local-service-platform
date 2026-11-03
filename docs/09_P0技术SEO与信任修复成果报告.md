@@ -158,3 +158,19 @@ curl -s -o /dev/null -w '%{http_code}\n' https://approvedtilers.co.uk/this-page-
 ### 7.3 验证
 - 本地 `npm run build` 863 页，`npm run verify` 0 错误。
 - 表单浏览器测试：见下方 7.4（在预览站上用替换后的 `fetch` 测试，未向真实接口提交任何数据）。
+
+### 7.4 预览站复查（https://aca487f3.uk-local-service-platform.pages.dev）
+
+**curl：**
+- `/`、`/quote`、`/promo/voucher-claim`、`/bathroom-tiling`、`/bathroom-tiling/leeds` 均 200；`/bathroom-tiling/leeds/` 308 → 无斜杠；`/does-not-exist` 404 ✅
+- 城市页：canonical 无斜杠；`Rated 4.96/5 by 350+`、`"aggregateRating"`、`£2,000,000 Verified`、`Active Trade Availability` 均已恢复 ✅
+- 首页 `aggregateRating` 已恢复；llms.txt 含 "premier verified trade network" ✅
+- `/quote` 与 `/promo/voucher-claim` 的打包脚本都引用 `leadForm` 模块，模块内的提交地址为 `form.highland-travel.com`；页面中已没有 `roamglade` 旧端点 ✅
+
+**浏览器（`/quote`，`window.fetch` 已替换为本地桩函数，没有请求发到真实接口）：**
+- 从 `?city=Leeds&postcode=LS1&service=kitchen-tiling` 进入：服务自动选中 "Kitchen Tiling & Splashbacks"，邮编 LS1，城市 Leeds ✅
+- 请求：`POST https://form.highland-travel.com`，`Content-Type: application/json`；`tour = "Kitchen Tiling & Splashbacks - Leeds"`、`address = "LS1"`、`start_date = "2026-12-01"`、`contact_method = "Phone / WhatsApp"`，其余信息拼进 `message` ✅
+- 桩函数返回 400：显示错误提示和备用邮箱 support@approvedtilers.co.uk，表单保留，按钮可再次提交 ✅
+- 桩函数返回 200：隐藏表单，显示成功信息 ✅
+
+**`/promo/voucher-claim` 浏览器测试未完成**：在这个页面替换 `fetch` 的脚本被权限分类器拦截。它和 `/quote` 用的是同一个 `submitLead()`（只有 `response.ok` 才算成功，网络错误返回 false）。字段拼装与成功/失败分支已在代码中核对，但**没有在浏览器里实际跑过**。建议所有者在预览站手动提交一次，或允许我用替换 `fetch` 的方式再测一次。
